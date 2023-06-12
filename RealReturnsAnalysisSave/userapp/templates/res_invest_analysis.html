@@ -1,0 +1,58 @@
+{%load static%}
+<table border='1' class='table table-sm'   width='1000px' id='investment_analysis' ><thead> <tr></tr>
+    {%for head in tenant.tenant_column_heads%}
+    <th>{{head}}</th>
+    {%endfor%}
+</thead>
+   <!-- <th id='Year'></th>--> <!--for loop tenant years-->
+   <tbody>
+   {%for head in tenant.tenant_column_heads%}
+   {%for tenan in tenant.tenant_column_heads.tenant_name %}
+   {{tenan}}
+    <tr>
+        <td>{{head.0}}</td>
+</tr>
+    {%endfor%}
+    {%endfor%}
+    
+        "<td id=" + blurcss + "> $ " + numberWithCommas(getNum(year_lease2).toFixed(0)) + "</td>"
+        " </tr></thead><tbody> <tr><td>Additional Incomes - " + $(income_name_list[i]).val() + "</td>"
+            "<td id=" + blurcss + "> $ " + numberWithCommas(income_amount.toFixed(0)) + "</td>"
+            "</tr><tr><td>Closing Concession</td>"
+                "<td id=" + blurcss + "> $ " + numberWithCommas(clos_conc) + " </td>"
+                "</tr><tr><td>Income - Yearly Total Rents</td>";
+                    "<td id=" + blurcss + "> $ " + numberWithCommas(Math.round(all_income_slab)) + "</td>";
+                    "</tr><tr><td>Expenses - Taxes</td>";
+                        "<td id=" + blurcss + "> $ " + numberWithCommas(expense_taxes.toFixed(0)) + "</td>";
+                        "</tr><tr><td>Expenses - Insurance</td>";
+                            "<td id=" + blurcss + "> $ " + numberWithCommas(expense_insurance.toFixed(0)) + "</td>";
+                            "</tr><tr><td>Expenses - HOA</td>";
+                                "<td id=" + blurcss + "> $ " + numberWithCommas(expense_hoa1.toFixed(0)) + "</td>";
+                                "</tr><tr><td>Expense - Maintenance @ " + expense_maintenance_set + " " + expense_maintenance_type_disp + "</td>";
+                                    "<td id=" + blurcss + "> $ " + numberWithCommas(parseFloat(year_lease_exp).toFixed(0)) + "</td>";
+                                    "</tr><tr><td>Expenses - Vacancy @" + expense_vacancy_set + " " + expense_vacancy_type_disp + "</td>";
+                                        "<td id=" + blurcss + "> $ " + numberWithCommas(parseFloat(expense_vacancy).toFixed(0)) + "</td>";
+                                        "</tr><tr><td>Expenses - Property Management @" + property_mgmt_set + " " + property_mgmt_type_disp + "</td>";
+                                            "<td id=" + blurcss + "> $ " + numberWithCommas(parseFloat(expense_property).toFixed(0)) + "</td>";
+                                            " </tr></thead><tbody> <tr><td>Additional Expenses - " + $(expense_head_name_list[i]).val() + "</td>";
+                                                "<td id=" + blurcss + "> $ " + numberWithCommas(Math.round(expense_amount)) + "</td>";
+                                                "</tr><tr><td>Closing Expenses</td>";
+                                                    "<td id=" + blurcss + "> $ " + numberWithCommas(clos_exp) + " </td>";
+                                                    "</tr><tr><td>Total Expenses</td>";
+                                                        "<td id=" + blurcss + "> $ " + numberWithCommas(Math.round(total_year_calc_new_exp)) + "</td>";
+                                                        "</tr><tr><td>NOI (Yearly Total - Expenses)</td>";
+                                                            "<td id=" + blurcss + "> $ " + numberWithCommas(Math.round(total_year_calc_new)) + "</td>";
+                                                            "</tr><tr><td>CAP Rate  (NOI/Asset Acquisition Value 'AAV')</td>";
+                                                                "<td id=" + blurcss + ">" + acq_value.toFixed(2) + " %</td>";
+                                                                "</tr><tr><td>Interest Paid to Mortgage</td>";
+                                                                    "<td id=" + blurcss + "> $ " + numberWithCommas(payy.toFixed(0)) + "</td>";
+                                                                    "</tr><tr><td>Net Income (NOI-Interest Paid)</td>";
+                                                                        "<td id=" + blurcss + "> $ " + numberWithCommas(Math.round(getNum(net_income))) + "</td>";
+                                                                        "</tr><tr><td>Principal </td>";
+                                                                            "<td id=" + blurcss + "> $ " + numberWithCommas(Math.round(getNum(payy))) + "</td>";
+                                                                            "</tr><tr><td>Yearly Cashflow</td>";
+                                                                                "<td id=" + blurcss + "> $ " + numberWithCommas(Math.round(yealy_cashflow)) + "</td>";
+                                                                                "</tr><tr><td>Yearly ROI</td>";
+                                                                                    "<td id=" + blurcss + ">" + ROI.toFixed(2) + " % </td>";
+                                                                                    "  </tr>   </tbody></table></br></br><span id='YearCashFlow' hidden>" + YearCashFlowFinal + "</span> <span id='BM_10' hidden>" + mortagage_loan4 + "</span>";
+                                                                                   

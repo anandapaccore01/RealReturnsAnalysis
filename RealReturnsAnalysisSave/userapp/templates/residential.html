@@ -1,0 +1,1829 @@
+{%load static%}
+{%load user_tags%}
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title></title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="">
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.4/dist/jquery.slim.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+  <style>
+    .card-header-form {
+      background: #5ca9cc;
+      padding: 0px 10px;
+      font-size: 12px;
+    }
+
+    .card-header {
+      background: #5ca9cc;
+    }
+
+    .text-white {
+      color: #000 !important;
+    }
+
+    label {
+      color: #eda140;
+    }
+
+    div.ex1 {
+      width: 100%;
+      height: 800px;
+      overflow: scroll;
+      overflow-x: hidden;
+    }
+
+    .card-header {
+      background: #5ca9cc;
+      color: black;
+    }
+
+    .input-group .btn {
+      box-shadow: none;
+      padding: .375rem .75rem;
+      font-size: 16px;
+    }
+
+    .line {
+      width: 95%;
+      border-top: 1px solid #f8f9fa;
+      height: 47px;
+      margin-left: 10px;
+      position: absolute;
+    }
+
+    .address-popup {
+      position: absolute;
+      display: block;
+      border: 3px solid #f1f1f1;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.8);
+      z-index: 9;
+    }
+
+    /* Add styles to the form container */
+    .address-container {
+      padding: 10px;
+      background-color: black;
+      align: center;
+      max-width: 500px;
+      margin: 0 auto;
+      opacity: 1;
+    }
+
+    /* Full-width input fields */
+    .address-container input {
+      width: 100%;
+      padding: 15px;
+      margin: 5px 0 22px 0;
+      border: none;
+    }
+  </style>
+  <style>
+    table#investment_analysis #blurcss1 {
+      background: black;
+      filter: blur(2px);
+      -o-filter: blur(2px);
+      -ms-filter: blur(2px);
+      -moz-filter: blur(2px);
+      -webkit-filter: blur(2px);
+    }
+
+    table#investment_summary5 #blurcss1 {
+      background: black;
+      filter: blur(2px);
+      -o-filter: blur(2px);
+      -ms-filter: blur(2px);
+      -moz-filter: blur(2px);
+      -webkit-filter: blur(2px);
+    }
+
+    table#investment_summary #blurcss1 {
+      background: black;
+      filter: blur(2px);
+      -o-filter: blur(2px);
+      -ms-filter: blur(2px);
+      -moz-filter: blur(2px);
+      -webkit-filter: blur(2px);
+    }
+  </style>
+</head>
+
+<body>
+  {%if reportsdata %}
+  <body onload="dynamicUpdate();">
+  {%endif%}
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-8 col-md-8 col-lg-8 col-xl-8">
+        <form action="{%url 'userapp:save-residential-reports'%}" method="POST" class="needs-validation" novalidate
+          id="residential-info">
+          {%csrf_token%}
+          <div class="card" style="margin-top: 5px;">
+            <h6 class="text-uppercase" style="margin-top: 5px;text-align: center;"> </h6>
+            <input type="hidden" name="analysis_type" value="0">
+            <div id="accordion1">
+              <div class="card">
+                <div class="card-header text-uppercase card-header-form">
+                  <button type="button" class="btn btn-link text-white shadow-none" data-toggle="collapse show"
+                    data-target="#collapse-1" aria-expanded="true" aria-controls="collapse-7">
+                    Property Details
+                  </button>
+                </div>
+                <div id="collapse-1" class="collapse show" data-parent="#accordion1">
+                  <div class="card-body">
+                    <div class="row mt-2">
+                      <div class="col-12 col-sm-4 col-md-8 col-lg-4 col-xl-4">
+                        <label for="validationCustom09">Asset name</label> <i aria-hidden="true" data-toggle="tooltip"
+                          data-placement="top" title="" class="fa fa-info-circle"></i>
+                        <div class="input-group">
+                          <input type="text" class="form-control" id="asset_name" required name="asset_name" {% if reportsdata %}{% if reportsdata.cloned == 0 %} readonly{%endif%} value="{{reportsdata.asset_name}}" {%endif%} placeholder="Enter Asset Name">
+                        </div>
+                      </div>
+                      <div id="asset_name_validate"></div>
+                      <div class="col-12 col-lg-4 col-xl-4">
+                        <label for="validationCustom09">Address</label> <i aria-hidden="true" data-toggle="tooltip"
+                          data-placement="top" title="" class="fa fa-info-circle"></i>
+                        <div class="input-group">
+                          <input type="text" class="form-control" id="asset_address" required name="asset_address" {% if reportsdata%}{% if reportsdata.cloned == 0 %} readonly {%endif%} value="{{reportsdata.asset_address}}" {%endif%}>
+                        </div>
+                      </div>
+                      <div class="col-12 col-lg-4 col-xl-4">
+                        <label for="validationCustom09"> Purchase Price</label> <i aria-hidden="true"
+                          data-toggle="tooltip" data-placement="top" title="" class="fa fa-info-circle"></i>
+                        <div class="input-group">
+                          <div class="input-group-prepend">
+                            <span class="input-group-text">$</span>
+                          </div>
+                          <input type="number" step="any" class="form-control" min="0" onblur="this.value = 
+                    !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null" required
+                            placeholder="Purchase Price" id="original_purchase_price" name="original_purchase_price"
+                            oninput="dynamicUpdate();" {% if reportsdata%}{% if reportsdata.cloned == 0 %} readonly {%endif%} value="{{reportsdata.original_purchase_price}}" {%endif%}>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row mt-2">
+                      <div class="col-12 col-lg-4 col-xl-4">
+                        <label for="validationCustom09">Holding Period</label> <i aria-hidden="true"
+                          data-toggle="tooltip" data-placement="top" title="" class="fa fa-info-circle"></i>
+                        <div class="input-group">
+                          <input type="number" class="form-control no_years" id="no_years" min="0" onblur="this.value = 
+                    !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null" name="no_years"
+                            placeholder="Number of Years" {% if reportsdata%} value="{{reportsdata.no_years}}" {%else%}value="10"{%endif%} oninput="dynamicUpdate();">
+                        </div>
+                      </div>
+                      <div class="col-12 col-lg-4 col-xl-4">
+                        <label for="validationCustom09">Total SFT</label> <i aria-hidden="true" data-toggle="tooltip"
+                          data-placement="top" title="" class="fa fa-info-circle"></i>
+                        <div class="input-group">
+                          <input type="number" class="form-control" id="total_sft" min="0" onblur="this.value = 
+                    !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null" required name="total_sft" {% if reportsdata%} value="{{reportsdata.total_sft}}"{%endif%} >
+                        </div>
+                      </div>
+                      <div class="col-12  col-lg-4 col-xl-4">
+                        <label for="validationCustom09"> No. of Units</label> <i aria-hidden="true"
+                          data-toggle="tooltip" data-placement="top" title="" class="fa fa-info-circle"></i>
+                        <div class="input-group">
+                          <select class="form-control" id="no_units" name="no_units" onchange="dynamicUpdate();">
+                            {% if reportsdata%}  <option value="{{reportsdata.no_units}}" selected>{{reportsdata.no_units}}</option>{%else%}
+                            <option value='1' selected>1 </option>{%endif%}
+                            {% get_range 2 31 as units_range%}
+                            {%for x in units_range %}
+                            <option value='{{x}}' {% if reportsdata and reportsdata.no_units == x %} selected {%endif%}>{{x}} </option>
+                            {%endfor%}
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row mt-2">
+                      <div class="col-12 col-lg-4 col-xl-4">
+                        <label for="validationCustom09"> Asset Appraisal Value </label> <i aria-hidden="true"
+                          data-toggle="tooltip" data-placement="top" title="" class="fa fa-info-circle"></i>
+                        <div class="input-group">
+                          <input type="number" step="any" min="0" onblur="this.value = 
+                    !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null" class="form-control"
+                            id="asset_appraisal_value" oninput="dynamicUpdate();" {% if reportsdata %} value="{{reportsdata.asset_appraisal_value}}" {%else%} value="5" {%endif%} name="asset_appraisal_value">
+                          <div class="input-group-prepend">
+                            <select class="form-control" id="asset_appraisal_type" name="asset_appraisal_type"
+                              onchange="dynamicUpdate();" style="width: 130px;">
+                              <option>Choose </option>
+                              <option value="0" selected {% if reportsdata and reportsdata.asset_appraisal_type == "0" %} selected {%endif%}>Percentage</option>
+                              <option value="1" {% if reportsdata and reportsdata.asset_appraisal_type == "1" %} selected {%endif%}>Fixed</option>
+                            </select>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-12 col-lg-4 col-xl-4">
+                        <label for="validationCustom09">Sales Expenses</label> <i aria-hidden="true"
+                          data-toggle="tooltip" data-placement="top" title="" class="fa fa-info-circle"></i>
+                        <div class="input-group">
+                          <input type="number" step="any" min="0" onblur="this.value = 
+                    !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null" class="form-control"
+                            placeholder="Sales Expenses" id="sales_expense_value" oninput="dynamicUpdate();"
+                            name="sales_expense_value" {% if reportsdata %} value="{{reportsdata.sales_expense_value}}" {%else%} value="5" {%endif%}>
+                          <div class="input-group-append">
+                            <select class="form-control" id="sales_expense_type" name="sales_expense_type"
+                              onchange="dynamicUpdate();" style="width: 130px;">
+                              <option>Choose </option>
+                              <option value="0" selected {% if reportsdata and reportsdata.sales_expense_type == "0" %} selected  {%endif%}>Percentage</option>
+                              <option value="1" {% if reportsdata and reportsdata.sales_expense_type == "1" %} selected  {%endif%}>Fixed</option>
+                            </select>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-12 col-lg-4 col-xl-4">
+                        <label for="validationCustom09"> Ammortization Years</label> <i aria-hidden="true"
+                          data-toggle="tooltip" data-placement="top" title="" class="fa fa-info-circle"></i>
+                        <div class="input-group">
+                          <select class="form-control" id="ammortization_years" name="ammortization_years"
+                            onchange="dynamicUpdate();">
+                            <option value=''>Choose </option>
+                            {% if reportsdata %}  <option value="{{reportsdata.ammortization_years}}" selected>{{reportsdata.ammortization_years}}</option>{%else%}
+                              <option value='30' selected >30 </option> {%endif%}
+                            {% get_range 1 31 as units_range%}
+                            {%for x in units_range %}
+                            <option value='{{x}}' {% if reportsdata and reportsdata.ammortization_years == x %} selected {%endif%}>{{x}} </option>
+                            {%endfor%}
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row mt-2">
+                      <div class="col-12 col-lg-4 col-xl-4">
+                        <label for="validationCustom09">Year Acquired </label> <i aria-hidden="true"
+                          data-toggle="tooltip" data-placement="top" title="" class="fa fa-info-circle"></i>
+                        <div class="input-group">
+                          <input type="number" class="form-control" required id="acquired_on" placeholder="Acquired On"
+                            name="acquired_on" oninput="dynamicUpdate();" {% if reportsdata %} readonly value="{{reportsdata.acquired_on}}" {%endif%}>
+                        </div>
+                      </div>
+                      <div class="col-12 col-lg-4 col-xl-4">
+                        <label for="validationCustom09">Annual Rate of Interest</label> <i aria-hidden="true"
+                          data-toggle="tooltip" data-placement="top" title="" class="fa fa-info-circle"></i>
+                        <div class="input-group">
+                          <input type="number" step="any" min="0" onblur="this.value = 
+                    !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null" class="form-control"
+                            required id="annual_rate_interests" name="annual_rate_interests" {% if reportsdata %} value="{{annual_rate_interests}}" {%endif%}>
+                          <div class="input-group-append" oninput="dynamicUpdate();">
+                            <select class="form-control" id="annual_rate_interests_type"
+                              name="annual_rate_interests_type" onchange="dynamicUpdate();" style="width: 130px;">
+                              <option value="0" selected>Percentage</option>
+                            </select>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="card">
+                <div class="card-header text-uppercase card-header-form" data-toggle="collapse show"
+                  data-target="#collapse-2" aria-expanded="false" aria-controls="collapse-2">
+                  <button type="button" id="loan-details" class="btn btn-link text-white shadow-none collapsed">
+                    Loan Details
+                  </button>
+                </div>
+                <div id="collapse-2" class="collapse show" data-parent="#accordion1">
+                  <div class="card-body">
+                    <div class="row mt-2">
+                      <div class="col-12 col-lg-4 col-xl-4">
+                        <div id="user_input_amount">
+                          <label for="validationCustom09">Down Payment Value </label> <i aria-hidden="true"
+                            data-toggle="tooltip" data-placement="top" title="" class="fa fa-info-circle"></i>
+                          <div class="input-group">
+                            <div class="input-group-prepend">
+                              <div id="amount_down_doll" style="display: none"><span class="input-group-text">$</span>
+                              </div>
+                            </div>
+                            <input type="number" step="any" min="0" onblur="this.value = 
+                      !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null" class="form-control"
+                              required placeholder="Enter Value" id='amount_down_payment_value'
+                              name='amount_down_payment_value' onchange="dynamicUpdate();" {% if reportsdata%} value="{{reportsdata.amount_down_payment_value}}" {%else%} value ="25" {%endif%}>
+                            <div class="input-group-prepend">
+                              <select class="form-control" required id="amount_down_payment_type"
+                                name="amount_down_payment_type" style="width: 130px;" onchange="dynamicUpdate();">
+                                <option>Choose </option>
+                                <option value="0" selected {% if reportsdata and reportsdata.amount_down_payment_type == "0" %} selected {%endif%}>Percentage</option>
+                                <option value="1" {% if reportsdata and reportsdata.amount_down_payment_type == "1" %} selected {%endif%}>Fixed</option>
+                              </select>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-12 col-lg-4 col-xl-4">
+                        <label for="validationCustom09">Amount of Down Payment</label> <i aria-hidden="true"
+                          data-toggle="tooltip" data-placement="top" title="" class="fa fa-info-circle"></i>
+                        <div class="input-group">
+                          <div class="input-group-prepend">
+                            <span class="input-group-text">$</span>
+                          </div>
+                          <input type="number" step="any" min="0" onblur="this.value = 
+                    !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null" class="form-control"
+                            required placeholder="Amount of Down Payment" id='amount_down_payment'
+                            name='amount_down_payment' {% if reportsdata %} value="{{reportsdata.amount_down_payment}}" {%endif%}>
+                        </div>
+                      </div>
+                      <div class="col-12 col-lg-4 col-xl-4">
+                        <label for="validationCustom09">Mortagage Loan</label> <i aria-hidden="true"
+                          data-toggle="tooltip" data-placement="top" title=" config('constants.MORTAGAGE_LOAN') "
+                          class="fa fa-info-circle"></i>
+                        <div class="input-group">
+                          <div class="input-group-prepend">
+                            <span class="input-group-text">$</span>
+                          </div>
+                          <input type="number" step="any" min="0" onblur="this.value = 
+                    !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null" class="form-control"
+                            required placeholder="Mortagage Loan" id='mortgage_loan' name="mortgage_loan" {% if reportsdata %} value="{{reportsdata.mortgage_loan}}" {%endif%}>
+                        </div>
+                      </div>
+                    </div>
+                    <!--end row-->
+                    <div class="row mt-2">
+                      <div class="col-12 col-lg-4 col-xl-4">
+                        <label for="validationCustom09" style="color:#be4741;">Gross Income</label> <i
+                          aria-hidden="true" data-toggle="tooltip" data-placement="top"
+                          title=" config('constants.GROSS_INCOME') " class="fa fa-info-circle"></i>
+                        <div class="input-group">
+                          <div class="input-group-prepend">
+                            <span class="input-group-text">$</span>
+                          </div>
+                          <input type="number" step="any" class="form-control" readonly required
+                            placeholder="Gross Income" id='gross_income' name='gross_income' {% if reportsdata %} value="{{reportsdata.gross_income}}" {%endif%}>
+                        </div>
+                      </div>
+                      <div class="col-12 col-lg-4 col-xl-4">
+                        <label for="validationCustom09" style="color:#be4741;">NOI</label> <i aria-hidden="true"
+                          data-toggle="tooltip" data-placement="top" title=" config('constants.NOI') "
+                          class="fa fa-info-circle"></i>
+                        <div class="input-group">
+                          <div class="input-group-prepend">
+                            <span class="input-group-text">$</span>
+                          </div>
+                          <input type="number" step="any" class="form-control" readonly required placeholder="NOI"
+                            id="noi" name="noi">
+                        </div>
+                      </div>
+                      <div class="col-12 col-lg-4 col-xl-4">
+                        <label for="validationCustom09" style="color:#be4741;">CAP Rate</label> <i aria-hidden="true"
+                          data-toggle="tooltip" data-placement="top" title=" config('constants.CAP_RATE') "
+                          class="fa fa-info-circle"></i>
+                        <div class="input-group">
+                          <input type="number" step="any" class="form-control" readonly required placeholder="CAP Rate"
+                             id="cap_rate" name="cap_rate" {% if reportsdata%} value="{{reportsdata.cap_rate}}" {%endif%}>
+                          <div class="input-group-append">
+                            <span class="input-group-text">%</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row mt-2">
+                      <div class="col-12 col-lg-4 col-xl-4">
+                        <label for="validationCustom09" style="color:#be4741;">Year1 ROI</label> <i aria-hidden="true"
+                          data-toggle="tooltip" data-placement="top" title=" config('constants.YEAR1_ROI') "
+                          class="fa fa-info-circle"></i>
+                        <div class="input-group">
+                          <div class="input-group-prepend">
+                            <span class="input-group-text">$</span>
+                          </div>
+                          <input type="number" step="any" class="form-control" readonly required
+                            placeholder="Year1 ROI," id='year1_roi' name='year1_roi' {% if reportsdata%} value="{{reportsdata.year1_roi}}" {%endif%}>
+                        </div>
+                      </div>
+                      <div class="col-12 col-lg-4 col-xl-4">
+                        <label for="validationCustom09" style="color:#be4741;">Total ROI %</label> <i aria-hidden="true"
+                          data-toggle="tooltip" data-placement="top" title=" config('constants.TOTAL_ROI_PERCENTAGE') %"
+                          class="fa fa-info-circle"></i>
+                        <div class="input-group">
+                          <input type="number" step="any" class="form-control" readonly required
+                            placeholder="Total ROI %" id="total_roi_percentage" name="total_roi_percentage">
+                          <div class="input-group-prepend">
+                            <span class="input-group-text">%</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-12 col-lg-4 col-xl-4">
+                        <label for="validationCustom09" style="color:#be4741;">Total ROI</label> <i aria-hidden="true"
+                          data-toggle="tooltip" data-placement="top" title=" config('constants.TOTAL_ROI') "
+                          class="fa fa-info-circle"></i>
+                        <div class="input-group">
+                          <input type="number" step="any" class="form-control" readonly required placeholder="Total ROI"
+                             id="total_roi" name="total_roi" {% if reportsdata%} value="{{reportsdata.total_roi}}" {%endif%}>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="card">
+                <div class="card-header text-uppercase card-header-form" data-toggle="collapse show"
+                  data-target="#collapse-3" aria-expanded="false" aria-controls="collapse-3">
+                  <button type="button" class="btn btn-link text-white shadow-none collapsed">
+                    CLOSING DETAILS
+                  </button>
+                </div>
+                <div id="collapse-3" class="collapse show" data-parent="#accordion1">
+                  <div class="card-body">
+                    <div class="row mt-2">
+                      <div class="col-12">
+                        <label for="validationCustom09">Closing Concessions</label> <i aria-hidden="true"
+                          data-toggle="tooltip" data-placement="top" title=" config('constants.CLOSING_CONCESSIONS') "
+                          class="fa fa-info-circle"></i>
+                        Total ($) : <span id="closing_consessions_view">{% if clo_con %} {{sum_clo_conc}} {%else%} 0 {%endif%} </span></br>
+                        <div class="table-responsive">
+                          <table class="table table-bordered table-sm" id="dynamic_field4">
+                            <tr>
+                              <th> <label for="validationCustom09">Label</label> <i aria-hidden="true"
+                                  data-toggle="tooltip" data-placement="top"
+                                  title=" config('constants.CLOSING_CONCESSIONS_LABEL') " class="fa fa-info-circle"></i>
+                              </th>
+                              <th> <label for="validationCustom09">Amount</label> <i aria-hidden="true"
+                                  data-toggle="tooltip" data-placement="top"
+                                  title=" config('constants.CLOSING_CONCESSIONS_AMOUNT') "
+                                  class="fa fa-info-circle"></i></th>
+                              <th></th>
+                              {% if clo_con%} 
+                              {%for post in clo_con%}
+                              <tr> 
+                                <tr>
+                         
+                                <td>  <input  type="text"  class="form-control locationwidth"  placeholder="Enter Name" {% if reportsdata %} value="{{post.title }}" {%endif%} name="closing_consession_name">
+                                      <td>    <div class="input-group">    <div class="input-group-append"> <span class="input-group-text">$</span> </div>
+                                 <input   type="number" min="0" onblur="this.value = 
+                          !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null" class="form-control consessionCal" id="expense_amount"  name="closing_consessionamount" placeholder="Enter Amount" {% if reportsdata %} value="{{post.amount}}" {%endif%} oninput="dynamicUpdate();" ></div></td>
+                         
+                                       
+                                  <td></td>
+                                    </tr>
+                              {%endfor%}
+                              {%else%}
+                            <tr>
+                            <tr>
+                              <td> <input type="text" class="form-control locationwidth" placeholder="Enter Name">
+                              <td>
+                                <div class="input-group">
+                                  <div class="input-group-append"> <span class="input-group-text">$</span> </div>
+                                  <input type="number" min="0" onblur="this.value = 
+                            !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null"
+                                    class="form-control consessionCal" id="expense_amount"
+                                    name="closing_consessionamount" placeholder="Enter Amount"
+                                    oninput="dynamicUpdate();">
+                                </div>
+                              </td>
+                              <td></td>
+                            </tr>
+                            <tr>
+                            <tr>
+                              <td> <input type="text" min="0" onblur="this.value = 
+                        !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null" required
+                                  value="Closing Concession" class="form-control locationwidth" placeholder="Enter Name"
+                                  name="closing_consession_name">
+                              <td>
+                                <div class="input-group">
+                                  <div class="input-group-append"> <span class="input-group-text">$</span> </div>
+                                  <input type="number" value="0" min="0" onblur="this.value = 
+                            !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null" required
+                                    class="form-control consessionCal" id="closing_consessionamount"
+                                    name="closing_consessionamount" placeholder="Enter Amount"
+                                    oninput="dynamicUpdate();">
+                                </div>
+                              </td>
+                              <td><button type="button" name="add" id="add4" class="btn btn-sm btn-success">+</button>
+                              </td>
+                            </tr>
+                            {%endif%}
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+                    </br>
+                    <div class="row mt-2">
+                      <div class="col-12 ">
+                        <label for="validationCustom09">Closing Expenses</label> <i aria-hidden="true"
+                          data-toggle="tooltip" data-placement="top" title=" config('constants.CLOSING_EXPENSES') "
+                          class="fa fa-info-circle"></i>
+                        Total ($) : <span id="closing_expenses_view">{% if clo_exp%} {{sum_clo_exp}} {%else%} 0 {%endif%} </span></br>
+                        <div class="table-responsive">
+                          <table class="table table-bordered table-sm" id="dynamic_field3">
+                            <tr>
+                              <th> <label for="validationCustom09">Label</label> <i aria-hidden="true"
+                                  data-toggle="tooltip" data-placement="top"
+                                  title=" config('constants.CLOSING_EXPENSES_LABEL') " class="fa fa-info-circle"></i>
+                              </th>
+                              <th> <label for="validationCustom09">Amount</label> <i aria-hidden="true"
+                                  data-toggle="tooltip" data-placement="top"
+                                  title=" config('constants.CLOSING_EXPENSES_AMOUNT') " class="fa fa-info-circle"></i>
+                              </th>
+                              <th></th>
+                              {% if clo_exp%} 
+                              {%for post in clo_exp%}
+
+                              <tr> 
+                                <tr>  <td>  <input  type="text"  class="form-control locationwidth"  placeholder="Enter Name" {% if reportsdata %} value="{{post.title }}" {%endif%} name="closing_expensename">
+                                      <td>   <div class="input-group">    <div class="input-group-append"> <span class="input-group-text">$</span> </div>
+                                <input   type="number"  min="0" onblur="this.value = 
+                          !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null"class="form-control expensesCal" id="closing_expenseamount" name="closing_expenseamount" placeholder="Enter Amount" {% if reportsdata %} value="{{ post.amount }}" {%endif%} oninput="dynamicUpdate();" ></div></td>
+                         
+                                       
+                                  <td></td>
+                                    </tr>
+                          {%endfor%}
+                          {%else%} 
+                            <tr>
+                            <tr>
+                              <td> <input type="text" class="form-control locationwidth" placeholder="Enter Name">
+                              <td>
+                                <div class="input-group">
+                                  <div class="input-group-append"> <span class="input-group-text">$</span> </div>
+                                  <input type="number" min="0" onblur="this.value = 
+                            !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null"
+                                    class="form-control expensesCal" id="closing_expenseamount"
+                                    name="closing_expenseamount" placeholder="Enter Amount" oninput="dynamicUpdate();">
+                                </div>
+                              </td>
+                              <td></td>
+                            </tr>
+                            <tr>
+                            <tr>
+                              <td> <input type="text" required value="Closing Expenses"
+                                  class="form-control locationwidth" placeholder="Enter Name"
+                                  name="closing_expensename">
+                              <td>
+                                <div class="input-group">
+                                  <div class="input-group-append"> <span class="input-group-text">$</span> </div>
+                                  <input type="number" value="0" min="0" onblur="this.value = 
+                            !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null" required
+                                    class="form-control expensesCal" id="closing_expenseamount"
+                                    name="closing_expenseamount" placeholder="Enter Amount" oninput="dynamicUpdate();">
+                                </div>
+                              </td>
+                              <td><button type="button" name="add" id="add3" class="btn btn-sm btn-success">+</button>
+                              </td>
+                            </tr>
+                            {%endif%}
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="card">
+                <div class="card-header text-uppercase card-header-form" data-toggle="collapse show"
+                  data-target="#collapse-4" aria-expanded="false" aria-controls="collapse-4">
+                  <button type="button" class="btn btn-link text-white shadow-none collapsed">
+                    Tenant Details
+                  </button>
+                </div>
+                <div id="collapse-4" class="collapse show" data-parent="#accordion1">
+                  <div class="card-body">
+                    <div class="row mt-2" id="no_units_tenant">
+                      <div class="col-12 col-lg-12 col-xl-12">
+                        </br>
+                        <div class="pull-right"><button type="button" name="add" id="add"
+                            class="btn btn-sm btn-success"> +</button></div>
+                      </div>
+                    </div>
+                    {% if tenants_count and tenants_count > 0%}
+                    {%for tenant in tenants%}
+                    {% with forloop.counter0 as tt %}
+                    <div class="row mt-2" {% if tt == tenants|length|add:"-1" %} id="dynamic_field" {%endif%}>
+                      <div class="row mt-2 tenant tenant_row{{tt}}" id = "row{{tt}}">
+                       <div class="col-12"> <div class="pull-right"><button type="button" class="btn btn-sm btn-danger btn_remove deleteTenant" data-id="{{tenant.id }}-{{tt}}">X</button></div></div>
+                       <input type="hidden" name="tenant_id" value="{{tenant.id}}">
+                             <div class="col-12 col-lg-4 col-xl-4">
+                         <label for="validationCustom09">Tenant Name</label> <i aria-hidden="true" data-toggle="tooltip" data-placement="top" title="config('constants.TENANT_NAME')" class="fa fa-info-circle"></i>
+                               <div class="input-group">
+                           <input  type="text"    class="form-control tenant_name" id="tenant_name" oninput="dynamicUpdate();" value="{{tenant.tenant_name}}" required placeholder="Tenant Name"  name="tenant_name_edit">
+                                </div>
+                             </div> 
+                                  <div class="col-12 col-lg-4 col-xl-4">
+                            <label for="validationCustom09"> SFT Leased</label> <i aria-hidden="true" data-toggle="tooltip" data-placement="top" title="config('constants.SFT_LEASED')" class="fa fa-info-circle"></i>
+                               <div class="input-group">
+                           
+                                  <input   type="number" required min="0" onblur="this.value = 
+                     !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null" class="form-control sft_leased" id="sft_leased"  value="{{ tenant.sft_leased }}" name="sft_leased_edit" placeholder="SFT Leased" oninput="dynamicUpdate();" >
+                                </div>
+                             </div>
+                        <div class="col-12 col-lg-4 col-xl-4">
+                          <label for="validationCustom09">Rate </label> <i aria-hidden="true" data-toggle="tooltip" data-placement="top" title="config('constants.SFT_LEASED_RATE')" class="fa fa-info-circle"></i>
+                                  <div class="input-group">
+                          
+                             <input   type="number" step="any" min="0" onblur="this.value = 
+                     !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null"  required class="form-control lease_rate" id="lease_rate"  name="lease_rate_edit" value="{{tenant.lease_rate}}" placeholder="Lease Rate" {% if reportsdata %} value="" {%endif%} oninput="dynamicUpdate();">
+                                <div class="input-group-append">
+                            <select class="form-control lease_rate_type" required id="lease_rate_type" style="width: 130px;" onchange="dynamicUpdate();" name="lease_rate_type_edit">
+                              <option>Choose </option>
+                            <option value="0" {% if tenant.lease_rate_type == 0 %} selected {%endif%} >Rate Per Sq Ft</option>
+                              <option value="1" {% if tenant.lease_rate_type == 1 %} selected {%endif%} >Fixed Per Month</option>
+                            </select>
+                             </div>
+                                    </div>
+                             </div>
+                    
+                       <div class="col-12">
+                       
+                       
+                       {% get_split_list tenant.rent_increases "-" as pieces_rent_increases%}
+                       {% get_split_list tenant.rent_increase_value "-" as pieces_rent_increase_value%}
+                       {% get_split_list tenant.rent_increases_for_every_year "-" as pieces_rent_increases_for_every_year%}
+                          {% get_range 0 pieces_rent_increases|length as units_range%}
+                          {% for x in units_range%}
+                           {% if pieces_rent_increases|return_list_item:x != ''%}
+                             
+                          <div class="row" id="rowt{{tt}}">
+                             <div class="col-12 col-lg-4 col-xl-4"></br>
+                          {% if x == 0 %}  <label for="validationCustom09"> Escalation Freq	</label> <i aria-hidden="true" data-toggle="tooltip" data-placement="top" title="config('constants.ESCALATION_FREQUENCY')" class="fa fa-info-circle"></i>
+                               <div class="input-group">
+                          <select class="form-control rent_frequency" required id="rent_frequency{{tt}}"  onchange="rentFrequncy('{{tt}}');dynamicUpdate();"  name="rent_frequency_edit">
+                              <option>Choose </option>
+                           <option value="0"  {% if tenant.rent_frequency == 0 %} selected {%endif%}>Equal</option>
+                              <option value="1" {% if tenant.rent_frequency == 1 %} selected {%endif%} >Random</option>
+                            </select>
+                          </div>{%endif%}
+                             </div>
+                             <div class="col-12 col-lg-4 col-xl-4" id="rowET{{x}}"></br>
+                        {% if x == 0 %}	 <label for="validationCustom09">Increament Val</label> <i aria-hidden="true" data-toggle="tooltip" data-placement="top" title="config('constants.INCREAMENT_VAL')" class="fa fa-info-circle"></i>{%endif%}
+                             <div class="input-group">
+                      
+                            <input   type="number" required min="0" onblur="this.value = 
+                     !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null" class="form-control rent_increase_value"   value="{{pieces_rent_increase_value|return_list_item:x}}"   id="rent_increase_value" name="rent_increase_value_edit[{{tt}}]" placeholder="Increase Value" oninput="dynamicUpdate();">
+                                  <div class="input-group-append">
+                             <select class="form-control rent_increases" required id="rent_increases" style="width: 130px;" onchange="dynamicUpdate();" name="rent_increases_edit[{{tt}}]">
+                              <option>Choose </option>
+                            <option value="0" {% if pieces_rent_increases|return_list_item:x == "0" %} selected {%endif%} >Percentage</option>
+                              <option value="1" {% if pieces_rent_increases|return_list_item:x == "1" %} selected {%endif%} >Fixed</option>
+                            </select>
+                    
+                                    </div> 
+                    
+                                    </div> 
+                             </div> 
+                                  <div class="col-12 col-lg-4 col-xl-4" id="rowET1{{x}}"></br>
+                          {% if x == 0 %}   <label for="validationCustom09">  <div id="randomoptiondivYear">For Every</div> <div id="randomoptiondivAt" style="display: none">At Year</div></label> <i aria-hidden="true" data-toggle="tooltip" data-placement="top" title="config('constants.INCREAMENT_AT_YEAR')" class="fa fa-info-circle"></i>{%endif%}
+                  <div class="input-group">
+                        <select  class="form-control rent_increases_for_every_year" required id="rent_increases_for_every_year" onchange="dynamicUpdate();" name="rent_increases_for_every_year_edit[{{tt}}]">
+                          <option value="{{pieces_rent_increases_for_every_year|return_list_item:x}}" selected >{{pieces_rent_increases_for_every_year|return_list_item:x}} Year</option>	<option value="1"  >1 Year</option> <option value="2" >2 Year</option> <option value="3" >3 Year</option><option value="4" >4 Year</option> <option value="5" >5 Year</option><option value="6"  >6 Year</option> <option value="7" >7 Year</option> <option value="8" >8 Year</option><option value="9" >9 Year</option> <option value="10" >10 Year</option></select> 
+                             
+                              &nbsp;<div class="input-group-append"> {% if x == 0 and tenant.rent_frequency == 1%}<div id="randomoptiondiv{{tt}}" >  <button type="button" name="add"  onclick="randomoption_edit('{{tt}}')" class="btn btn-sm btn-success">+</button> </div>{%endif%}
+                          {% if x == 0 %} <div id="randomoptiondiv{{tt}}"  style="display: none"> <button type="button" name="add"  onclick="randomoption_edit('{{tt}}')" class="btn btn-sm btn-success">+</button></div>{%endif%}
+                          {% if x != 0 %}
+                          <button type="button" class="btn btn-sm btn-danger btn_remove deleteTenantEscalations" data-id="{{tenant.id}}-{{x}}">X</button>
+                          {%endif%}
+                          </div>
+                          
+                                </div>
+                           </div> </div>   
+                           {%endif%}
+                           {%endfor%}
+                        
+                        </div><!--<div class="line"></div>--></div>
+                       </div>
+                         </div></br></br>
+                          {%endwith%}
+                          {%endfor%}
+                          {%else%}
+                    <div class="col-12" id="dynamic_field">
+                      <div class="row mt-2 tenant tenant_rowt0" id="rowt0">
+                        <div class="col-12 col-lg-4 col-xl-4">
+                          <label for="validationCustom09">Tenant Name</label> <i aria-hidden="true"
+                            data-toggle="tooltip" data-placement="top" title=" config('constants.TENANT_NAME') "
+                            class="fa fa-info-circle"></i>
+                          <div class="input-group">
+                            <input type="text" class="form-control tenant_name" id="tenant_name"
+                              oninput="dynamicUpdate();" required placeholder="Tenant Name" value="Tenant1"
+                              name="tenant_name">
+                          </div>
+                        </div>
+                        <div class="col-12 col-lg-4 col-xl-4">
+                          <label for="validationCustom09"> SFT Leased</label> <i aria-hidden="true"
+                            data-toggle="tooltip" data-placement="top" title=" config('constants.SFT_LEASED') "
+                            class="fa fa-info-circle"></i>
+                          <div class="input-group">
+                            <input type="number" required min="0" onblur="this.value = 
+                      !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null"
+                              class="form-control sft_leased" id="sft_leased" name="sft_leased" placeholder="SFT Leased"
+                              oninput="dynamicUpdate();">
+                          </div>
+                        </div>
+                        <div class="col-12 col-lg-4 col-xl-4">
+                          <label for="validationCustom09">Rate </label> <i aria-hidden="true" data-toggle="tooltip"
+                            data-placement="top" title=" config('constants.SFT_LEASED_RATE') "
+                            class="fa fa-info-circle"></i>
+                          <div class="input-group">
+                            <input type="number" step="any" min="0" onblur="this.value = 
+                      !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null" required
+                              class="form-control lease_rate" id="lease_rate" name="lease_rate" placeholder="Lease Rate"
+                              oninput="dynamicUpdate();">
+                            <div class="input-group-append">
+                              <select class="form-control lease_rate_type" required id="lease_rate_type"
+                                onchange="dynamicUpdate();" name="lease_rate_type">
+                                <option>Choose </option>
+                                <option value="0" selected>Rate Per Sq Ft</option>
+                                <option value="1">Fixed Per Month</option>
+                              </select>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-12 col-lg-4 col-xl-4">
+                          </br>
+                          <label for="validationCustom09"> Escalation Frequency </label> <i aria-hidden="true"
+                            data-toggle="tooltip" data-placement="top"
+                            title=" config('constants.ESCALATION_FREQUENCY') " class="fa fa-info-circle"></i>
+                          <div class="input-group">
+                            <select class="form-control rent_frequency" required id="rent_frequency0"
+                              onchange="rentFrequncy(0);dynamicUpdate();" name="rent_frequency">
+                              <option value="0" selected>Equal</option>
+                              <option value="1">Random</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div class="col-12 col-lg-4 col-xl-4">
+                          </br>
+                          <label for="validationCustom09">Increament Value</label> <i aria-hidden="true"
+                            data-toggle="tooltip" data-placement="top" title=" config('constants.INCREAMENT_VAL') "
+                            class="fa fa-info-circle"></i>
+                          <div class="input-group">
+                            <input type="number" step="any" min="0" onblur="this.value = 
+                      !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null" required
+                              class="form-control rent_increase_value" value="0" id="rent_increase_value"
+                              name="rent_increase_value[0]" placeholder="Increase Value" oninput="dynamicUpdate();">
+                            <div class="input-group-append">
+                              <select class="form-control rent_increases" required id="rent_increases"
+                                style="width: 130px;" onchange="dynamicUpdate();" name="rent_increases[0]">
+                                <option value="0" selected>Percentage</option>
+                                <option value="1">Fixed</option>
+                              </select>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-12 col-lg-4 col-xl-4">
+                          </br>
+                          <label for="validationCustom09">
+                            <div id="randomoptiondivYear">For Every</div>
+                            <div id="randomoptiondivAt" style="display: none">At Year</div>
+                          </label>
+                          <i aria-hidden="true" data-toggle="tooltip" data-placement="top"
+                            title="  config('constants.INCREAMENT_AT_YEAR') " class="fa fa-info-circle"></i>
+                          <div class="input-group">
+                            <select class="form-control rent_increases_for_every_year" required
+                              id="rent_increases_for_every_year" onchange="dynamicUpdate();"
+                              name="rent_increases_for_every_year[0]">
+                              <option value="1" selected>1 Year</option>
+                              <option value="2">2 Year</option>
+                              <option value="3">3 Year</option>
+                              <option value="4">4 Year</option>
+                              <option value="5">5 Year</option>
+                              <option value="6">6 Year</option>
+                              <option value="7">7 Year</option>
+                              <option value="8">8 Year</option>
+                              <option value="9">9 Year</option>
+                              <option value="10">10 Year</option>
+                            </select>
+                            &nbsp;
+                            <div class="input-group-append">
+                              <div id="randomoptiondiv0" style="display: none"> <button type="button" name="add"
+                                  onclick="randomoption(0)" class="btn btn-sm btn-success">+</button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    {%endif%}
+                  </div>
+                </div>
+              </div>
+              <div class="card">
+                <div class="card-header text-uppercase card-header-form" data-toggle="collapse show"
+                  data-target="#collapse-6" aria-expanded="false" aria-controls="collapse-6">
+                  <button type="button" class="btn btn-link text-white shadow-none collapsed">
+                    Additional Income Details
+                  </button>
+                </div>
+                <div id="collapse-6" class="collapse show" data-parent="#accordion1">
+                  <div class="card-body">
+                    <div class="row mt-2">
+                      <div class="col-12 col-lg-12 col-xl-12">
+                        </br>
+                        <div class="pull-right"><button type="button" name="add" id="addadditionalincome"
+                            class="btn btn-sm btn-success"> +</button></div>
+                      </div>
+                    </div>
+                    {%if additional_income_count and additional_income_count > 0%}	
+                    {%for additional in additional_income%}  
+                    {% with forloop.counter0 as ac %}
+                    <div class="row mt-2" {%if ac == additional_income|length|add:"-1" %} id="addadditional_income_dynamic" {%endif%} >
+                      <div class="row mt-2 additional additional_rowa{{ac}}" id = "rowa{{ac}}">
+                       <div class="col-12"> <div class="pull-right"><button type="button" class="btn btn-sm btn-danger btn_remove deleteSubheads" data-id="{{additional.id}}-{{ac}}">X</button></div>	</div>		
+                        <input type="hidden" value="{{additional.id }}" name="additional_income_id">
+                             <div class="col-12 col-lg-4 col-xl-4">
+                         <label for="validationCustom09">Label Name</label> <i aria-hidden="true" data-toggle="tooltip" data-placement="top" title="config('constants.ADDITIONAL_INCOME_LABEL')" class="fa fa-info-circle"></i>
+                               <div class="input-group">
+                           <input  type="text"    class="form-control income_name" id="income_name"  value="{{additional.title}}"  placeholder="Income Name Name"  name="income_name_edit">
+                                </div>
+                             </div> 
+                                  <div class="col-12 col-lg-4 col-xl-4">
+                            <label for="validationCustom09"> Income Amount</label> <i aria-hidden="true" data-toggle="tooltip" data-placement="top" title="config('constants.ADDITIONAL_INCOME_AMOUNT')" class="fa fa-info-circle"></i>
+                               <div class="input-group">
+                           
+                                  <input   type="number" min="0" onblur="this.value = 
+                     !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null" class="form-control income_amount" id="income_amount"  value="{{additional.amount }}" name="income_amount_edit" placeholder="Income Amount" oninput="dynamicUpdate();" >
+                                </div>
+                             </div>
+                         
+                                  <div class="col-12 col-lg-4 col-xl-4">
+                          <label for="validationCustom09"> Escalation Freq	</label> <i aria-hidden="true" data-toggle="tooltip" data-placement="top" title="config('constants.ESCALATION_FREQUENCY')" class="fa fa-info-circle"></i>
+                               <div class="input-group">
+                          <select class="form-control income_frequency"  id="income_frequency{{ac}}" onchange="additionalFrequncy('{{ac}}');dynamicUpdate();" name="income_frequency_edit">
+                              <option>Choose </option>
+                           <option value="0"  {%if additional.frequency == 0 %} selected {%endif%}>Equal</option>
+                              <option value="1" {%if additional.frequency == 1 %} selected {%endif%} >Random</option>
+                            </select>
+                          </div>
+                             </div>
+                       <div class="col-12">	
+                          {% get_split_list additional.increases_type "-" as pieces_income_increases_type%}
+                          {% get_split_list additional.increase_value "-" as pieces_income_increase_value%}
+                          {% get_split_list additional.increases_for_every_year "-" as pieces_income_increases_for_every_year%}
+                          {% get_range 0 pieces_income_increases_type|length as units_range%}
+                          {% for x in units_range%}
+                          {% if pieces_income_increases_type|return_list_item:x != ''%}
+                     <div class="row" id="rowa{{ac}}">
+                             &nbsp;<div class="col-12 col-lg-4 col-xl-4" id="rowEI{{x}}"></br>
+                         {% if x == 0 %} <label for="validationCustom09">Increament Val</label> <i aria-hidden="true" data-toggle="tooltip" data-placement="top" title="config('constants.INCREAMENT_VAL')" class="fa fa-info-circle"></i>{%endif%}
+                             <div class="input-group">
+                      
+                            <input   type="number" step="any"  min="0" onblur="this.value = 
+                     !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null" class="form-control income_increase_value"   value="{{pieces_income_increase_value|return_list_item:x}}"   id="income_increase_value" name="income_increase_value_edit[{{ac}}]" placeholder="Increase Value" oninput="dynamicUpdate();">
+                                  <div class="input-group-append">
+                             <select class="form-control income_increases_type"  id="income_increases_type" style="width: 130px;" oninput="dynamicUpdate();" name="income_increases_type_edit[{{ac}}]">
+                              <option>Choose </option>
+                            <option value="0" {% if pieces_income_increases_type|return_list_item:x == "0" %} selected {%endif%} >Percentage</option>
+                              <option value="1" {% if pieces_income_increases_type|return_list_item:x == "1" %} selected {%endif%} >Fixed</option>
+                            </select>
+                    
+                                    </div> 
+                    
+                                    </div> 
+                             </div> 
+                                  <div class="col-12 col-lg-4 col-xl-4" id="rowEI1{{x}}"></br>
+                           {% if x == 0 %}  <label for="validationCustom09">  <div id="randomoptiondivadditionalYear">For Every</div> <div id="randomoptiondivadditionalAt" style="display: none">At Year</div></label> <i aria-hidden="true" data-toggle="tooltip" data-placement="top" title="config('constants.INCREAMENT_AT_YEAR')" class="fa fa-info-circle"></i>{%endif%}
+                          
+                               <div class="input-group">
+                        <select  class="form-control income_increases_for_every_year"  id="income_increases_for_every_year" oninput="dynamicUpdate();" name="income_increases_for_every_year_edit[{{ac}}]">
+                          <option value="{{pieces_income_increases_for_every_year|return_list_item:x}}" selected >{{pieces_income_increases_for_every_year|return_list_item:x}} Year</option>	<option value="1"  >1 Year</option> <option value="2" >2 Year</option> <option value="3" >3 Year</option><option value="4" >4 Year</option> <option value="5" >5 Year</option><option value="6"  >6 Year</option> <option value="7" >7 Year</option> <option value="8" >8 Year</option><option value="9" >9 Year</option> <option value="10" >10 Year</option></select> 
+                          
+                          
+                            
+                     &nbsp;<div class="input-group-append">   {% if x == 0 and additional.frequency == 1 %}<div id="randomoptiondivadditional{{ac}}" >  <button type="button" name="add"  onclick="randomoptionadditional_edit('{{ac}}')" class="btn btn-sm btn-success">+</button> </div>{%endif%}
+                       {% if x == 0 %}<div id="randomoptiondivadditional{{ac}}"  style="display: none"> <button type="button" name="add"  onclick="randomoptionadditional_edit('{{ac}}')" class="btn btn-sm btn-success">+</button></div>{%endif%}
+                     {% if x != 0 %}
+                          <button type="button" class="btn btn-sm btn-danger btn_remove deleteIncomeEscalations" data-id="{{additional.id}}-{{x}}">X</button> {%endif%}
+                        
+                          
+                          </div>
+                    
+                                </div>
+                           </div> </div> 
+                           {%endif%}
+                           {%endfor%}
+                        
+                        </div><!--<div class="line"></div>-->
+                       </div>
+                         </div></br></br>
+                          {%endwith%} 
+                          {%endfor%}
+                          {%else%}
+                    <div class="col-12" id="addadditional_income_dynamic">
+                      <div class="row mt-2 additional additional_rowa0" id="rowa0">
+                        <div class="col-12 col-lg-4 col-xl-4">
+                          <label for="validationCustom09">Income Name</label> <i aria-hidden="true"
+                            data-toggle="tooltip" data-placement="top"
+                            title=" config('constants.ADDITIONAL_INCOME_LABEL') " class="fa fa-info-circle"></i>
+                          <div class="input-group">
+                            <input type="text" class="form-control income_name" id="income_name"
+                              placeholder="Income Name" name="income_name">
+                          </div>
+                        </div>
+                        <div class="col-12 col-lg-4 col-xl-4">
+                          <label for="validationCustom09">Income Amount</label> <i aria-hidden="true"
+                            data-toggle="tooltip" data-placement="top"
+                            title=" config('constants.ADDITIONAL_INCOME_AMOUNT') " class="fa fa-info-circle"></i>
+                          <div class="input-group">
+                            <input type="number" min="0" onblur="this.value = 
+                      !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null"
+                              class="form-control income_amount" id="income_amount" name="income_amount"
+                              placeholder="Income Amount" oninput="dynamicUpdate();">
+                          </div>
+                        </div>
+                        <div class="col-12 col-lg-4 col-xl-4">
+                          <label for="validationCustom09"> Escalation Frequency </label> <i aria-hidden="true"
+                            data-toggle="tooltip" data-placement="top"
+                            title=" config('constants.ESCALATION_FREQUENCY') " class="fa fa-info-circle"></i>
+                          <div class="input-group">
+                            <select class="form-control income_frequency" id="income_frequency0"
+                              onchange="additionalFrequncy(0);dynamicUpdate();" name="income_frequency">
+                              <option value="0" selected>Equal</option>
+                              <option value="1">Random</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div class="col-12 col-lg-4 col-xl-4">
+                          </br>
+                          <label for="validationCustom09">Increament Value</label> <i aria-hidden="true"
+                            data-toggle="tooltip" data-placement="top" title=" config('constants.INCREAMENT_VAL') "
+                            class="fa fa-info-circle"></i>
+                          <div class="input-group">
+                            <input type="number" step="any" min="0" onblur="this.value = 
+                      !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null"
+                              class="form-control income_increase_value" value="0" id="income_increases_for_every_year"
+                              name="income_increase_value[0]" placeholder="Increase Value" oninput="dynamicUpdate();">
+                            <div class="input-group-append">
+                              <select class="form-control income_increases_type" id="income_increases_type"
+                                style="width: 130px;" onchange="dynamicUpdate();" name="income_increases_type[0]">
+                                <option value="0" selected>Percentage</option>
+                                <option value="1">Fixed</option>
+                              </select>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-12 col-lg-4 col-xl-4">
+                          </br>
+                          <label for="validationCustom09">
+                            <div id="randomoptiondivadditionalYear">For Every</div>
+                            <div id="randomoptiondivadditionalAt" style="display: none">At Year</div>
+                          </label>
+                          <i aria-hidden="true" data-toggle="tooltip" data-placement="top"
+                            title=" config('constants.INCREAMENT_AT_YEAR') " class="fa fa-info-circle"></i>
+                          <div class="input-group">
+                            <select class="form-control income_increases_for_every_year"
+                              id="income_increases_for_every_year" onchange="dynamicUpdate();"
+                              name="income_increases_for_every_year[0]">
+                              <option value="1" selected>1 Year</option>
+                              <option value="2">2 Year</option>
+                              <option value="3">3 Year</option>
+                              <option value="4">4 Year</option>
+                              <option value="5">5 Year</option>
+                              <option value="6">6 Year</option>
+                              <option value="7">7 Year</option>
+                              <option value="8">8 Year</option>
+                              <option value="9">9 Year</option>
+                              <option value="10">10 Year</option>
+                            </select>
+                            &nbsp;
+                            <div class="input-group-append">
+                              <div id="randomoptiondivadditional0" style="display: none"> <button type="button"
+                                  name="add" id="addincome" onclick="randomoptionadditional(0)"
+                                  class="btn btn-sm btn-success">+</button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    {%endif%}
+                  </div>
+                </div>
+              </div>
+              <div class="card">
+                <div class="card-header text-uppercase card-header-form" data-toggle="collapse show"
+                  data-target="#collapse-7" aria-expanded="false" aria-controls="collapse-7">
+                  <button type="button" class="btn btn-link text-white shadow-none collapsed">
+                    Expenses DETAILS
+                  </button>
+                </div>
+                <div id="collapse-7" class="collapse show" data-parent="#accordion1">
+                  <div class="card-body">
+                    <div id="accordion2">
+                      <div class="card mb-2">
+                        <div class="card-header text-uppercase card-header-form" data-toggle="collapse show"
+                          data-target="#collapse-20" aria-expanded="true" aria-controls="collapse-20">
+                          <button type="button" class="btn btn-link text-white shadow-none">
+                            Taxes
+                          </button>
+                        </div>
+                        <div id="collapse-20" class="collapse show" data-parent="#accordion2">
+                          <div class="card-body">
+                            <div class="row mt-2">
+                              <div class="col-12 col-lg-6 col-xl-6">
+                                <label for="validationCustom09">Taxes</label> <i aria-hidden="true"
+                                  data-toggle="tooltip" data-placement="top" title=" config('constants.EXPENSE_TAXES') "
+                                  class="fa fa-info-circle"></i>
+                                <div class="input-group">
+                                  <div class="input-group-append">
+                                    <span class="input-group-text">$</span>
+                                  </div>
+                                  <input type="number" class="form-control" min="0" onblur="this.value = 
+                            !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null" required
+                                    placeholder="Expense Taxes" id="expense_taxes" name="expense_taxes"
+                                    oninput="dynamicUpdate();"{% if reportsdata %} value="{{reportsdata.expense_taxes}}" {%else%} value="0" {%endif%}>
+                                  <div class="input-group-prepend">
+                                    <select class="form-control" required id="taxes_ye_mo" onchange="dynamicUpdate();"
+                                      style="width: 130px;" name="taxes_ye_mo">
+                                      {% if reportsdata %}
+                                        <option value="0" {% if reportsdata.taxes_ye_mo == 0 %} selected {%endif%}>Yearly</option>
+                                         <option value="1" {% if reportsdata.taxes_ye_mo == 1 %} selected {%endif%} >Monthly</option>
+                                       {%else%}
+                                      <option value="0" selected>Yearly</option>
+                                      <option value="1">Monthly</option>
+                                      {%endif%}
+                                    </select>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="col-12 col-lg-6 col-xl-6">
+                                <label for="validationCustom09">Escalation Frequency</label> <i aria-hidden="true"
+                                  data-toggle="tooltip" data-placement="top"
+                                  title=" config('constants.ESCALATION_FREQUENCY') " class="fa fa-info-circle"></i>
+                                <div class="input-group">
+                                  <select class="form-control" required id="taxes_frequency" onchange="dynamicUpdate();"
+                                    name="taxes_frequency">
+                                    {% if reportsdata %}  
+                                      <option value="0" {% if reportsdata.taxes_frequency == 0 %} selected {%endif%}>Equal</option>
+                                       <option value="1" {% if reportsdata.taxes_frequency == 1 %} selected {%endif%} >Random</option>
+                                     {%else%}
+                                    <option value="0" selected>Equal</option>
+                                    <option value="1">Random</option>
+                                    {%endif%}
+                                  </select>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="row" id="taxestable">
+                              {%if reportsdata %} 
+                                
+                              {% get_split_list reportsdata.taxes_increases_type "-" as pieces_taxes_increases_type%}
+                              {% get_split_list reportsdata.taxes_increase_value "-" as pieces_taxes_increase_value%}
+                              {% get_split_list reportsdata.taxes_increases_for_every_year "-" as pieces_taxes_increases_for_every_year%}
+                              {% get_range 0 pieces_taxes_increases_type|length as units_range%}
+                              {% for x in units_range%}
+                              {% if pieces_taxes_increases_type|return_list_item:x != ''%}
+                                <div class="col-12 col-lg-6 col-xl-6"></br>
+                                  {% if x == 0 %}	<label for="validationCustom09">Increment Value</label> <i aria-hidden="true" data-toggle="tooltip" data-placement="top" title="config('constants.INCREAMENT_VAL')" class="fa fa-info-circle"></i>{%endif%}
+                                    <div class="input-group">
+                                              
+                                           <input   type="number" step="any" min="0" onblur="this.value = 
+                               !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null" required class="form-control taxes_increase_value"   value="{{pieces_taxes_increase_value|return_list_item:x}}"  id="taxes_increase_value" name="taxes_increase_value" placeholder="Increase Value"  oninput="dynamicUpdate();">
+                                          <div class="input-group-append">
+                                               <select class="form-control taxes_increases_type" style="width: 130px;" required id="taxes_increases_type" onchange="dynamicUpdate();" name="taxes_increases_type">
+                                        
+                                      <option value="0" {% if pieces_taxes_increases_type|return_list_item:x == "0" %} selected {%endif%} >Percentage</option>
+                                        <option value="1" {% if pieces_taxes_increases_type|return_list_item:x == "1" %} selected {%endif%} >Fixed</option>
+                                      </select>
+                              
+                                              </div> 
+                                    </div>
+                                       </div>
+                                       <div class="col-12 col-lg-6 col-xl-6"></br>
+                                    {% if x == 0 %}		<label for="validationCustom09"><div id="randomoptiondivtaxesYear">For Every</div> <div id="randomoptiondivtaxesAt" style="display: none">At Year</div></label> <i aria-hidden="true" data-toggle="tooltip" data-placement="top" title="config('constants.INCREAMENT_AT_YEAR')" class="fa fa-info-circle"></i>{%endif%}
+                                    
+                                    <div class="input-group">
+                               <select class="form-control taxes_increases_for_every_year" required id="taxes_increases_for_every_year" onchange="getValues();" name="taxes_increases_for_every_year">
+                              {% if reportsdata %}<option value="{{pieces_taxes_increases_for_every_year|return_list_item:x}}" selected >{{pieces_taxes_increases_for_every_year|return_list_item:x}} Year</option>{%endif%}
+                                  <option value="1"  >1 Year</option> <option value="2" >2 Year</option> <option value="3" >3 Year</option><option value="4" >4 Year</option> <option value="5" >5 Year</option><option value="6"  >6 Year</option> <option value="7" >7 Year</option> <option value="8" >8 Year</option><option value="9" >9 Year</option> <option value="10" >10 Year</option></select> 
+                                  <div id="randomoptiondivtaxes" style="display: none"> <div class="input-group-append">   <button type="button" name="add" id="addtaxes" class="btn  btn-success">+</button></div> </div>
+                                          </div>
+                                    
+                                      
+                                        
+                                       </div>{%endif%}
+                                       {%endfor%}
+                                       {%else%}
+                              <div class="col-12 col-lg-6 col-xl-6">
+                                </br>
+                                <label for="validationCustom09">Increment Value</label> <i aria-hidden="true"
+                                  data-toggle="tooltip" data-placement="top"
+                                  title=" config('constants.INCREAMENT_VAL') " class="fa fa-info-circle"></i>
+                                <div class="input-group">
+                                  <input type="number" step="any" min="0" onblur="this.value = 
+                            !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null" required
+                                    class="form-control taxes_increase_value" value="0" id="taxes_increase_value"
+                                    name="taxes_increase_value" placeholder="Increase Value" oninput="dynamicUpdate();">
+                                  <div class="input-group-append">
+                                    <select class="form-control taxes_increases_type" required id="taxes_increases_type"
+                                      onchange="dynamicUpdate();" name="taxes_increases_type">
+                                      <option value="0" selected>Percentage</option>
+                                      <option value="1">Fixed</option>
+                                    </select>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="col-12 col-lg-6 col-xl-6">
+                                </br>
+                                <label for="validationCustom09">
+                                  <div id="randomoptiondivtaxesYear">For Every</div>
+                                  <div id="randomoptiondivtaxesAt" style="display: none">At Year</div>
+                                </label>
+                                <i aria-hidden="true" data-toggle="tooltip" data-placement="top"
+                                  title=" config('constants.INCREAMENT_AT_YEAR') " class="fa fa-info-circle"></i>
+                                <div class="input-group">
+                                  <select class="form-control taxes_increases_for_every_year" required
+                                    id="taxes_increases_for_every_year" onchange="dynamicUpdate();"
+                                    name="taxes_increases_for_every_year">
+                                    <option value="1" selected>1 Year</option>
+                                    <option value="2">2 Year</option>
+                                    <option value="3">3 Year</option>
+                                    <option value="4">4 Year</option>
+                                    <option value="5">5 Year</option>
+                                    <option value="6">6 Year</option>
+                                    <option value="7">7 Year</option>
+                                    <option value="8">8 Year</option>
+                                    <option value="9">9 Year</option>
+                                    <option value="10">10 Year</option>
+                                  </select>
+                                  <div id="randomoptiondivtaxes" style="display: none">
+                                    <div class="input-group-append"> <button type="button" name="add" id="addtaxes"
+                                        class="btn btn-sm btn-success">+</button></div>
+                                  </div>
+                                </div>
+                              </div>
+                              {%endif%}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="card mb-2">
+                        <div class="card-header text-uppercase card-header-form" data-toggle="collapse show"
+                          data-target="#collapse-21" aria-expanded="false" aria-controls="collapse-21">
+                          <button type="button" class="btn btn-link text-white shadow-none collapsed">
+                            Insurance
+                          </button>
+                        </div>
+                        <div id="collapse-21" class="collapse show" data-parent="#accordion2">
+                          <div class="card-body">
+                            <div class="row mt-2">
+                              <div class="col-12 col-lg-6 col-xl-6">
+                                <label for="validationCustom09">Insurance</label> <i aria-hidden="true"
+                                  data-toggle="tooltip" data-placement="top"
+                                  title=" config('constants.EXPENSE_INSURANCE') " class="fa fa-info-circle"></i>
+                                <div class="input-group">
+                                  <div class="input-group-append">
+                                    <span class="input-group-text">$</span>
+                                  </div>
+                                  <input type="number" class="form-control" required placeholder="Expense Insurance"
+                                    id="insurance_expense" name="insurance_expense" oninput="dynamicUpdate();" {% if reportsdata %} value="{{reportsdata.insurance_expense}}"{%else%}value="0" {%endif%}>
+                                  <div class="input-group-prepend">
+                                    <select class="form-control" required id="insu_ye_mo" onchange="dynamicUpdate();"
+                                      style="width: 130px;" name="insu_ye_mo">
+                                      {%if reportsdata %} 
+                                        <option value="0" {%if reportsdata.insu_ye_mo == 0 %} selected {%endif%}>Yearly</option>
+                                         <option value="1" {%if reportsdata.insu_ye_mo == 1 %} selected {%endif%} >Monthly</option>
+                                      {%else%}
+                                      <option value="0" selected>Yearly</option>
+                                      <option value="1">Monthly</option>
+                                      {%endif%}
+                                    </select>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="col-12 col-lg-6 col-xl-6">
+                                <label for="validationCustom09">Escalation Frequency</label> <i aria-hidden="true"
+                                  data-toggle="tooltip" data-placement="top"
+                                  title=" config('constants.ESCALATION_FREQUENCY') " class="fa fa-info-circle"></i>
+                                <div class="input-group">
+                                  <select class="form-control" required id="insu_frequency" onchange="dynamicUpdate();"
+                                    name="insu_frequency">
+                                    {% if reportsdata %}
+                                      <option value="0" {%if reportsdata.insu_frequency == 0 %} selected {%endif%}>Equal</option>
+                                       <option value="1" {%if reportsdata.insu_frequency == 1 %} selected {%endif%}>Random</option>
+                                    {%else%}
+                                    <option value="0" selected>Equal</option>
+                                    <option value="1">Random</option>
+                                    {%endif%}
+                                  </select>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="row" id="insurancetable">
+                                  {%if reportsdata %} 
+                                  {% get_split_list reportsdata.insu_increases_type "-" as pieces_insu_increases_type%}
+                                  {% get_split_list reportsdata.insu_increase_value "-" as pieces_insu_increase_value%}
+                                  {% get_split_list reportsdata.insu_increases_for_every_year "-" as pieces_insu_increases_for_every_year%}
+                                  {% get_range 0 pieces_insu_increases_type|length as units_range%}
+                                  {% for x in units_range%}
+                                  {% if pieces_insu_increases_type|return_list_item:x != ''%}
+                                
+                                  <div class="col-12 col-lg-6 col-xl-6"></br>
+                             {%if x == 0 %}		<label for="validationCustom09">Increment Value</label> <i aria-hidden="true" data-toggle="tooltip" data-placement="top" title="config('constants.INCREAMENT_VAL')" class="fa fa-info-circle"></i>{%endif%}
+                               <div class="input-group">
+                                         
+                                      <input   type="number" step="any" min="0" onblur="this.value = 
+                          !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null" required class="form-control insu_increase_value"  value="{{pieces_insu_increase_value|return_list_item:x}}"  id="insu_increase_value" name="insu_increase_value" placeholder="Increase Value"  oninput="dynamicUpdate();">
+                                     <div class="input-group-append">
+                                          <select class="form-control insu_increases_type" style="width: 130px;" required id="insu_increases_type" onchange="dynamicUpdate();" name="insu_increases_type">
+                               <option value="0" {%if pieces_insu_increases_type|return_list_item:x == "0" %} selected {%endif%} >Percentage</option>
+                                   <option value="1" {%if pieces_insu_increases_type|return_list_item:x == "1" %} selected {%endif%} >Fixed</option>
+                                 </select>
+                         
+                                         </div> 
+                               </div>
+                                  </div>
+                                  <div class="col-12 col-lg-6 col-xl-6"></br>
+                               {% if x == 0 %}	 			<label for="validationCustom09"><div id="randomoptiondivinsuYear">For Every</div> <div id="randomoptiondivinsuAt" style="display: none">At Year</div></label> <i aria-hidden="true" data-toggle="tooltip" data-placement="top" title="config('constants.INCREAMENT_AT_YEAR')" class="fa fa-info-circle"></i>{%endif%}
+                               
+                               <div class="input-group">
+                          <select class="form-control insu_increases_for_every_year" required id="insu_increases_for_every_year" onchange="dynamicUpdate();" name="insu_increases_for_every_year">
+                         {% if reportsdata %} <option value="{{pieces_insu_increases_for_every_year|return_list_item:x }}" selected >{{pieces_insu_increases_for_every_year|return_list_item:x}} Year</option>{%endif%}
+                             <option value="1"  >1 Year</option> <option value="2" >2 Year</option> <option value="3" >3 Year</option><option value="4" >4 Year</option> <option value="5" >5 Year</option><option value="6"  >6 Year</option> <option value="7" >7 Year</option> <option value="8" >8 Year</option><option value="9" >9 Year</option> <option value="10" >10 Year</option></select> 
+                             <div id="randomoptiondivinsurance" style="display: none"> <div class="input-group-append">   <button type="button" name="add" id="addinsu" class="btn btn-sm btn-success">+</button></div> </div>
+                                     </div>
+                               
+                                 
+                                   
+                                  </div>
+                                  
+                                  {%endif%}
+                                  {%endfor%}
+                                  {%else%}
+                              <div class="col-12 col-lg-6 col-xl-6">
+                                </br>
+                                <label for="validationCustom09">Increment Value</label> <i aria-hidden="true"
+                                  data-toggle="tooltip" data-placement="top"
+                                  title=" config('constants.INCREAMENT_VAL') " class="fa fa-info-circle"></i>
+                                <div class="input-group">
+                                  <input type="number" step="any" min="0" onblur="this.value = 
+                            !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null" required
+                                    class="form-control insu_increase_value" value="0" id="insu_increase_value"
+                                    name="insu_increase_value" placeholder="Increase Value" oninput="dynamicUpdate();">
+                                  <div class="input-group-append">
+                                    <select class="form-control insu_increases_type" style="width: 130px;" required
+                                      id="insu_increases_type" onchange="dynamicUpdate();" name="insu_increases_type">
+                                      <option value="0" selected>Percentage</option>
+                                      <option value="1">Fixed</option>
+                                    </select>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="col-12 col-lg-6 col-xl-6">
+                                </br>
+                                <label for="validationCustom09">
+                                  <div id="randomoptiondivinsuYear">For Every</div>
+                                  <div id="randomoptiondivinsuAt" style="display: none">At Year</div>
+                                </label>
+                                <i aria-hidden="true" data-toggle="tooltip" data-placement="top"
+                                  title=" config('constants.INCREAMENT_AT_YEAR') " class="fa fa-info-circle"></i>
+                                <div class="input-group">
+                                  <select class="form-control insu_increases_for_every_year" required
+                                    id="insu_increases_for_every_year" onchange="dynamicUpdate();"
+                                    name="insu_increases_for_every_year">
+                                    <option value="1" selected>1 Year</option>
+                                    <option value="2">2 Year</option>
+                                    <option value="3">3 Year</option>
+                                    <option value="4">4 Year</option>
+                                    <option value="5">5 Year</option>
+                                    <option value="6">6 Year</option>
+                                    <option value="7">7 Year</option>
+                                    <option value="8">8 Year</option>
+                                    <option value="9">9 Year</option>
+                                    <option value="10">10 Year</option>
+                                  </select>
+                                  <div id="randomoptiondivinsurance" style="display: none">
+                                    <div class="input-group-append"> <button type="button" name="add" id="addinsu"
+                                        class="btn  btn-success">+</button></div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            {%endif%}
+                          </div>
+                        </div>
+                      </div>
+                      <div class="card mb-2">
+                        <div class="card-header text-uppercase card-header-form" data-toggle="collapse show"
+                          data-target="#collapse-22" aria-expanded="false" aria-controls="collapse-22">
+                          <button type="button" class="btn btn-link text-white shadow-none collapsed">
+                            HOA
+                          </button>
+                        </div>
+                        <div id="collapse-22" class="collapse show" data-parent="#accordion2">
+                          <div class="card-body">
+                            <div class="row">
+                              <div class="col-12 col-lg-6 col-xl-6">
+                                <label for="validationCustom09">Hoa</label> <i aria-hidden="true" data-toggle="tooltip"
+                                  data-placement="top" title=" config('constants.EXPENSE_HOA') "
+                                  class="fa fa-info-circle"></i>
+                                <div class="input-group">
+                                  <div class="input-group-append">
+                                    <span class="input-group-text">$</span>
+                                  </div>
+                                  <input type="number" class="form-control" min="0" onblur="this.value = 
+                            !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null" required
+                                    placeholder="Expense Hoa" id="expense_hoa" name="expense_hoa"
+                                    oninput="dynamicUpdate();" {% if reportsdata%} value="{{reportsdata.expense_hoa}}" {%else%} value="0" {%endif%}>
+                                  <div class="input-group-prepend">
+                                    <select class="form-control" required id="hoa_ye_mo" style="width: 130px;"
+                                      onchange="dynamicUpdate();" name="hoa_ye_mo">
+                                      {% if reportsdata %}
+                                        <option value="0" {% if reportsdata.hoa_ye_mo == 0 %} selected {%endif%}>Yearly</option>
+                                         <option value="1" {% if reportsdata.hoa_ye_mo == 1 %} selected {%endif%} >Monthly</option>
+                                       {%else%}
+                                      <option value="0" selected>Yearly</option>
+                                      <option value="1">Monthly</option>
+                                      {%endif%}
+                                    </select>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="col-12 col-lg-6 col-xl-6">
+                                <label for="validationCustom09">Escalation Frequency</label> <i aria-hidden="true"
+                                  data-toggle="tooltip" data-placement="top"
+                                  title=" config('constants.ESCALATION_FREQUENCY') " class="fa fa-info-circle"></i>
+                                <div class="input-group">
+                                  <select class="form-control" required id="hoa_frequency" onchange="dynamicUpdate();"
+                                    name="hoa_frequency">
+                                    <option>Choose </option>
+                                    {% if reportsdata %}
+                                      <option value="0" {%if reportsdata.hoa_frequency == 0 %} selected {%endif%}>Equal</option>
+                                       <option value="1" {%if reportsdata.hoa_frequency == 1 %} selected {%endif%} >Random</option>
+                                     {%else%}
+                                    <option value="0" selected>Equal</option>
+                                    <option value="1">Random</option>
+                                    {%endif%}
+                                  </select>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="row" id="hoatable">
+                                  {%if reportsdata %} 
+                                  {% get_split_list reportsdata.hoa_increases_type "-" as pieces_hoa_increases_type%}
+                                  {% get_split_list reportsdata.hoa_increase_value "-" as pieces_hoa_increase_value%}
+                                  {% get_split_list reportsdata.hoa_increases_for_every_year "-" as pieces_hoa_increases_for_every_year%}
+                                  {% get_range 0 pieces_hoa_increases_type|length as units_range%}
+                                  {% for x in units_range%}
+                                  {% if pieces_hoa_increases_type|return_list_item:x != ''%}
+                                  <div class="col-12 col-lg-6 col-xl-6"></br>
+                             {% if x == 0 %}		<label for="validationCustom09">Increment Value</label> <i aria-hidden="true" data-toggle="tooltip" data-placement="top" title="config('constants.INCREAMENT_VAL')" class="fa fa-info-circle"></i>{%endif%}
+                               <div class="input-group">
+                                         
+                                      <input   type="number" step="any" min="0" onblur="this.value = 
+                          !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null" required class="form-control hoa_increase_value"   value="{{pieces_hoa_increase_value|return_list_item:x}}" id="hoa_increase_value" name="hoa_increase_value" placeholder="Increase Value"  oninput="dynamicUpdate();">
+                                     <div class="input-group-append">
+                                          <select class="form-control hoa_increases_type" style="width: 130px;" required id="hoa_increases_type" onchange="dynamicUpdate();" name="hoa_increases_type">
+                                   <option>Choose </option>
+                                   <option value="0" {% if pieces_hoa_increases_type|return_list_item:x == "0" %} selected {%endif%} >Percentage</option>
+                                   <option value="1" {% if pieces_hoa_increases_type|return_list_item:x == "1" %} selected {%endif%} >Fixed</option>
+                                 </select>
+                         
+                                         </div> 
+                               </div>
+                                  </div>
+                                  <div class="col-12 col-lg-6 col-xl-6"></br>
+                                  {% if x == 0 %}			<label for="validationCustom09"><div id="randomoptiondivhoaYear">For Every</div> <div id="randomoptiondivhoaAt" style="display: none">At Year</div></label> <i aria-hidden="true" data-toggle="tooltip" data-placement="top" title="config('constants.INCREAMENT_AT_YEAR')" class="fa fa-info-circle"></i>{%endif%}
+                               
+                               <div class="input-group">
+                          <select class="form-control hoa_increases_for_every_year" required id="hoa_increases_for_every_year" onchange="getValues();" name="hoa_increases_for_every_year">
+                         {% if reportsdata %}<option value="{{pieces_hoa_increases_for_every_year|return_list_item:x}}" selected >{{pieces_hoa_increases_for_every_year|return_list_item:x}} Year</option>{%endif%}
+                             <option value="1"  >1 Year</option> <option value="2" >2 Year</option> <option value="3" >3 Year</option><option value="4" >4 Year</option> <option value="5" >5 Year</option><option value="6"  >6 Year</option> <option value="7" >7 Year</option> <option value="8" >8 Year</option><option value="9" >9 Year</option> <option value="10" >10 Year</option></select> 
+                             <div id="randomoptiondivhoa" style="display: none"> <div class="input-group-append">   <button type="button" name="add" id="addhoa" class="btn btn-sm btn-success">+</button></div> </div>
+                                     </div>
+                               
+                                 
+                                   
+                                  </div> {%endif%}
+                                  {%endfor%}
+                                  {%else%}
+                              <div class="col-12 col-lg-6 col-xl-6">
+                                </br>
+                                <label for="validationCustom09">Increment Value</label> <i aria-hidden="true"
+                                  data-toggle="tooltip" data-placement="top"
+                                  title=" config('constants.INCREAMENT_VAL') " class="fa fa-info-circle"></i>
+                                <div class="input-group">
+                                  <input type="number" step="any" min="0" onblur="this.value = 
+                            !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null" required
+                                    class="form-control hoa_increase_value" value="0" id="hoa_increase_value"
+                                    name="hoa_increase_value" placeholder="Increase Value" oninput="dynamicUpdate();">
+                                  <div class="input-group-append">
+                                    <select class="form-control hoa_increases_type" style="width: 130px;" required
+                                      id="hoa_increases_type" onchange="dynamicUpdate();" name="hoa_increases_type">
+                                      <option value="0" selected>Percentage</option>
+                                      <option value="1">Fixed</option>
+                                    </select>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="col-12 col-lg-6 col-xl-6">
+                                </br>
+                                <label for="validationCustom09">
+                                  <div id="randomoptiondivhoaYear">For Every</div>
+                                  <div id="randomoptiondivhoaAt" style="display: none">At Year</div>
+                                </label>
+                                <i aria-hidden="true" data-toggle="tooltip" data-placement="top"
+                                  title=" config('constants.INCREAMENT_AT_YEAR') " class="fa fa-info-circle"></i>
+                                <div class="input-group">
+                                  <select class="form-control hoa_increases_for_every_year" required
+                                    id="hoa_increases_for_every_year" onchange="dynamicUpdate();"
+                                    name="hoa_increases_for_every_year">
+                                    <option value="1" selected>1 Year</option>
+                                    <option value="2">2 Year</option>
+                                    <option value="3">3 Year</option>
+                                    <option value="4">4 Year</option>
+                                    <option value="5">5 Year</option>
+                                    <option value="6">6 Year</option>
+                                    <option value="7">7 Year</option>
+                                    <option value="8">8 Year</option>
+                                    <option value="9">9 Year</option>
+                                    <option value="10">10 Year</option>
+                                  </select>
+                                  <div id="randomoptiondivhoa" style="display: none">
+                                    <div class="input-group-append"> <button type="button" name="add" id="addhoa"
+                                        class="btn  btn-success">+</button></div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            {%endif%}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="card ">
+                <div class="card-header text-uppercase card-header-form" data-toggle="collapse show"
+                  data-target="#collapse-8" aria-expanded="false" aria-controls="collapse-8">
+                  <button type="button" class="btn btn-link text-white shadow-none collapsed">
+                    Other Expenses
+                  </button>
+                </div>
+                <div id="collapse-8" class="collapse show" data-parent="#accordion1">
+                  <div class="card-body">
+                    <div class="row mt-2">
+                      <div class="col-12 col-lg-4 col-xl-4">
+                        <label for="validationCustom09"> Maintenance Type Expense</label> <i aria-hidden="true"
+                          data-toggle="tooltip" data-placement="top"
+                          title=" config('constants.EXPENSE_MAINTENANCE_TYPE') " class="fa fa-info-circle"></i>
+                        <div class="input-group">
+                          <input type="number" step="any" min="0" onblur="this.value = 
+                    !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null" class="form-control"
+                            required placeholder="Expense Maintenance" id="expense_maintenance"
+                            oninput="dynamicUpdate();" name="expense_maintenance" {% if reportsdata %} value="{{reportsdata.expense_maintenance}}"{%else%} value="3" {%endif%}>
+                          <div class="input-group-append">
+                            <select class="form-control" style="width: 130px;" onchange="dynamicUpdate();" required
+                              id="expense_maintenance_type" name="expense_maintenance_type">
+                              <option>Choose </option>
+                              <option value="0" selected {% if reportsdata and reportsdata.expense_maintenance_type == 0 %} selected {%endif%}>Percentage</option>
+                              <option value="1" {% if reportsdata and reportsdata.expense_maintenance_type == 1 %} selected {%endif%}>Fixed</option>
+                            </select>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-12 col-lg-4 col-xl-4">
+                        <label for="validationCustom09"> Vacancy</label> <i aria-hidden="true" data-toggle="tooltip"
+                          data-placement="top" title=" config('constants.EXPENSE_VACANCY') "
+                          class="fa fa-info-circle"></i>
+                        <div class="input-group">
+                          <input type="number" step="any" min="0" onblur="this.value = 
+                    !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null" class="form-control"
+                            required placeholder="Expense Vacancy" id="expense_vacancy" oninput="dynamicUpdate();"
+                            name="expense_vacancy" {% if reportsdata %} value="{{reportsdata.expense_vacancy}}" {%else%} value="4" {%endif%}>
+                          <div class="input-group-append">
+                            <select class="form-control" required id="expense_vacancy_type" style="width: 130px;"
+                              onchange="dynamicUpdate();" name="expense_vacancy_type">
+                              <option>Choose </option>
+                              <option value="0" selected {% if reportsdata and reportsdata.expense_vacancy_type == 0 %} selected {%endif%}>Percentage</option>
+                              <option value="1" {% if reportsdata and reportsdata.expense_vacancy_type == 1 %} selected {%endif%}>Fixed</option>
+                            </select>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-12 col-lg-4 col-xl-4">
+                        <label for="validationCustom09">Prop Mgmt Expense</label> <i aria-hidden="true"
+                          data-toggle="tooltip" data-placement="top"
+                          title=" config('constants.PROP_MANAGEMENT_EXPENSE') " class="fa fa-info-circle"></i>
+                        <div class="input-group">
+                          <input type="number" step="any" min="0" onblur="this.value = 
+                    !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null" class="form-control"
+                            required placeholder="property Management" id="property_mgmt" oninput="dynamicUpdate();"
+                            name="property_mgmt" {% if reportsdata %} value="{{reportsdata.property_mgmt}}" {%else%} value="6" {%endif%}>
+                          <div class="input-group-append">
+                            <select class="form-control" style="width: 130px;" required id="property_mgmt_type"
+                              onchange="dynamicUpdate();" name="property_mgmt_type">
+                              <option>Choose </option>
+                              <option value="0" selected {% if reportsdata and reportsdata.property_mgmt_type == 0 %} selected {%endif%}>Percentage</option>
+                              <option value="1" {% if reportsdata and reportsdata.property_mgmt_type == 1 %} selected {%endif%}>Fixed</option>
+                            </select>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!--end row-->
+                  </div>
+                </div>
+              </div>
+              <div class="card">
+                <div class="card-header text-uppercase card-header-form">
+                  <button type="button" class="btn btn-link text-white shadow-none collapsed"
+                    data-toggle="collapse show" data-target="#collapse-9" aria-expanded="false"
+                    aria-controls="collapse-9">
+                    ADDITIONAL EXPENSES
+                  </button>
+                </div>
+                <div id="collapse-9" class="collapse show" data-parent="#accordion1">
+                  <div class="card-body">
+                    <div class="row mt-2">
+                      <div class="col-12 col-lg-12 col-xl-12">
+                        </br>
+                        <div class="pull-right"><button type="button" name="add" id="addadditionalexpense"
+                            class="btn btn-sm btn-success"> +</button></div>
+                      </div>
+                    </div>
+                      {%if additional_expenses_count and additional_expenses_count > 0%}	
+                    {%for additional_expense in additional_expenses%}  
+                    {% with forloop.counter0 as ae %}	
+		
+                    <input type="hidden" value="{{additional_expense.id}}" name="additional_expense_id">
+                   <div class="row mt-2" {%if ae == additional_expenses|length|add:"-1" %} id="additional_expense_dynamic" {%endif%}> 
+                    <div class="row mt-2 additional1 additional1_rowe{{ae}}" id = "rowe{{ae}}">
+                    <div class="col-12">  <div class="pull-right"><button type="button" class="btn btn-sm btn-danger btn_remove deleteSubheadsExpense" data-id="{{additional_expense.id}}-{{ae}}">X</button></div></div>
+                           <div class="col-12 col-lg-4 col-xl-4">
+                       <label for="validationCustom09">Label Name</label> <i aria-hidden="true" data-toggle="tooltip" data-placement="top" title="config('constants.ADDITIONAL_EXPENSE_LABEL')" class="fa fa-info-circle"></i>
+                             <div class="input-group">
+                         <input  type="text"    class="form-control expense_head_name" id="expense_head_name"  value="{{additional_expense.title}}" required placeholder="Expense Name"  name="expense_head_name_edit">
+                              </div>
+                           </div> 
+                                <div class="col-12 col-lg-4 col-xl-4">
+                          <label for="validationCustom09"> Expense Amount</label> <i aria-hidden="true" data-toggle="tooltip" data-placement="top" title="config('constants.ADDITIONAL_EXPENSE_AMOUNT')" class="fa fa-info-circle"></i>
+                             <div class="input-group">
+                         
+                                <input   type="number" required min="0" onblur="this.value = 
+                   !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null" class="form-control expense_amount" id="expense_amount"  value="{{additional_expense.amount}}" name="expense_amount_edit" placeholder="Income Amount" oninput="dynamicUpdate();" >
+                              </div>
+                           </div>
+                       
+                                <div class="col-12 col-lg-4 col-xl-4">
+                        <label for="validationCustom09"> Escalation Freq	</label> <i aria-hidden="true" data-toggle="tooltip" data-placement="top" title="config('constants.ESCALATION_FREQUENCY')" class="fa fa-info-circle"></i>
+                             <div class="input-group">
+                        <select class="form-control expense_frequency" required id="expense_frequency{{ae}}"  onchange="additionalExpenseFrequncy('{{ae}}');" name="expense_frequency_edit">
+                            <option>Choose </option>
+                         <option value="0" {% if additional_expense.frequency == 0 %} selected {%endif%}>Equal</option>
+                            <option value="1" {% if additional_expense.frequency == 1 %} selected {%endif%} >Random</option>
+                          </select>
+                        </div>
+                           </div>
+                      
+                     <div class="col-12">
+                        {% get_split_list additional_expense.increases_type "-" as pieces_expense_increases_type%}
+                        {% get_split_list additional_expense.increase_value "-" as pieces_expense_increase_value%}
+                        {% get_split_list additional_expense.increases_for_every_year "-" as pieces_expense_increases_for_every_year%}
+                        {% get_range 0 pieces_expense_increases_type|length as units_range%}
+                        {% for x in units_range%}
+                        {% if pieces_expense_increases_type|return_list_item:x != ''%}
+                           
+                       
+                       <div class="row" id="rowe{{ae}}">
+                         <div class="col-12 col-lg-4 col-xl-4" id="rowEE{{x}}"></br>
+                       <label for="validationCustom09">Increament Val</label> <i aria-hidden="true" data-toggle="tooltip" data-placement="top" title="config('constants.INCREAMENT_VAL')" class="fa fa-info-circle"></i>
+                           <div class="input-group">
+                    
+                          <input   type="number" step="any" min="0" onblur="this.value = 
+                   !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null" required class="form-control expense_increase_value"   value="{{pieces_expense_increase_value|return_list_item:x}}"   id="expense_increase_value" name="expense_increase_value_edit[{{ae}}]" placeholder="Increase Value" oninput="dynamicUpdate();">
+                                <div class="input-group-append">
+                           <select class="form-control expense_increases_type" required id="expense_increases_type" style="width: 130px;" onchange="dynamicUpdate();" name="expense_increases_type_edit[{{ae}}]">
+                            <option>Choose </option>
+                          <option value="0" {% if pieces_expense_increases_type|return_list_item:x == "0" %} selected {%endif%} >Percentage</option>
+                            <option value="1" {% if pieces_expense_increases_type|return_list_item:x == "1" %} selected {%endif%} >Fixed</option>
+                          </select>
+                  
+                                  </div> 
+                  
+                                  </div> 
+                           </div> 
+                                <div class="col-12 col-lg-4 col-xl-4" id="rowEE1{{x}}"></br>
+                          <label for="validationCustom09">  <div id="randomoptiondivadditionalYear">For Every</div> <div id="randomoptiondivadditionalAt" style="display: none">At Year</div></label> <i aria-hidden="true" data-toggle="tooltip" data-placement="top" title="config('constants.INCREAMENT_AT_YEAR')" class="fa fa-info-circle"></i>
+                             <div class="input-group">
+                      <select  class="form-control expense_increases_for_every_year" required id="expense_increases_for_every_year" onchange="getValues();" name="expense_increases_for_every_year_edit[{{ae}}]">
+                        <option value="{{pieces_expense_increases_for_every_year|return_list_item:x}}" selected >{{pieces_expense_increases_for_every_year|return_list_item:x}} Year</option>	<option value="1"  >1 Year</option> <option value="2" >2 Year</option> <option value="3" >3 Year</option><option value="4" >4 Year</option> <option value="5" >5 Year</option><option value="6"  >6 Year</option> <option value="7" >7 Year</option> <option value="8" >8 Year</option><option value="9" >9 Year</option> <option value="10" >10 Year</option></select> 
+                        
+                   &nbsp;<div class="input-group-append"> {% if x == 0 and additional_expense.frequency == 1 %}<div id="randomoptiondivadditional{{ae}}" >  <button type="button" name="add"  onclick="randomoptionadditionalExpense_edit('{{ae}}')" class="btn btn-sm btn-success">+</button> </div>{%endif%}
+                    {% if x == 0 %} <div id="randomoptiondivadditionalExpense{{ae}}"  style="display: none"> <button type="button" name="add"  onclick="randomoptionadditionalExpense_edit('{{ae}}')" class="btn btn-sm btn-success">+</button></div>{%endif%}
+                   {%if x != 0 %}
+                        <button type="button" class="btn btn-sm btn-danger btn_remove deleteExpenseEscalations" data-id="{{additional_expense.id}}-{{x}}">X</button>{%endif%}
+                        
+                        </div>			
+                  
+                              </div>
+                         </div> </div>   &nbsp;
+                         {%endif%}
+                         {%endfor%}
+                         </div><!--<div class="line"></div>-->
+                     </div>
+                       </div></br></br>
+                              {%endwith%} 
+                              {%endfor%}
+                              {%else%}
+                    <input type="hidden" value=" {{additional_expense.id}} " name="additional_expense_id">
+                    <div class="row mt-2"></div>
+                    <div class="col-12" id="additional_expense_dynamic">
+                      <div class="row mt-2 additional1 additional1_rowe0" id="rowe0">
+                        <div class="col-12 col-lg-4 col-xl-4">
+                          <label for="validationCustom09">Expense Name</label> <i aria-hidden="true"
+                            data-toggle="tooltip" data-placement="top"
+                            title=" config('constants.ADDITIONAL_EXPENSE_LABEL') " class="fa fa-info-circle"></i>
+                          <div class="input-group">
+                            <input type="text" class="form-control expense_head_name" id="expense_head_name"
+                              placeholder="Expense Name" name="expense_head_name">
+                          </div>
+                        </div>
+                        <div class="col-12 col-lg-4 col-xl-4">
+                          <label for="validationCustom09">Expense Amount</label> <i aria-hidden="true"
+                            data-toggle="tooltip" data-placement="top"
+                            title=" config('constants.ADDITIONAL_EXPENSE_AMOUNT') " class="fa fa-info-circle"></i>
+                          <div class="input-group">
+                            <input type="number" min="0" onblur="this.value = 
+                      !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null"
+                              class="form-control expense_amount" id="expense_amount" name="expense_amount"
+                              placeholder="Expense Amount" oninput="dynamicUpdate();">
+                          </div>
+                        </div>
+                        <div class="col-12 col-lg-4 col-xl-4">
+                          <label for="validationCustom09"> Escalation Frequency </label> <i aria-hidden="true"
+                            data-toggle="tooltip" data-placement="top"
+                            title=" config('constants.ESCALATION_FREQUENCY') " class="fa fa-info-circle"></i>
+                          <div class="input-group">
+                            <select class="form-control expense_frequency" id="expense_frequency0"
+                              onchange="additionalExpenseFrequncy(0);dynamicUpdate();" name="expense_frequency">
+                              <option value="0" selected>Equal</option>
+                              <option value="1">Random</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div class="col-12 col-lg-4 col-xl-4">
+                          </br>
+                          <label for="validationCustom09">Increament Value</label> <i aria-hidden="true"
+                            data-toggle="tooltip" data-placement="top" title=" config('constants.INCREAMENT_VAL') "
+                            class="fa fa-info-circle"></i>
+                          <div class="input-group">
+                            <input type="number" step="any" min="0" onblur="this.value = 
+                      !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null" required
+                              class="form-control expense_increase_value" value="0" id="expense_increase_value"
+                              name="expense_increase_value[0]" placeholder="Increase Value" oninput="dynamicUpdate();">
+                            <div class="input-group-append">
+                              <select class="form-control expense_increases_type" required id="expense_increases_type"
+                                style="width: 130px;" onchange="dynamicUpdate();" name="expense_increases_type[0]">
+                                <option value="0" selected>Percentage</option>
+                                <option value="1">Fixed</option>
+                              </select>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-12 col-lg-4 col-xl-4">
+                          </br>
+                          <label for="validationCustom09">
+                            <div id="randomoptiondivadditional_expenseYear">For Every</div>
+                            <div id="randomoptiondivadditional_expenseAt" style="display: none">At Year</div>
+                          </label>
+                          <i aria-hidden="true" data-toggle="tooltip" data-placement="top"
+                            title=" config('constants.INCREAMENT_AT_YEAR') " class="fa fa-info-circle"></i>
+                          <div class="input-group">
+                            <select class="form-control expense_increases_for_every_year" required
+                              id="expense_increases_for_every_year" onchange="dynamicUpdate();"
+                              name="expense_increases_for_every_year[0]">
+                              <option value="1" selected>1 Year</option>
+                              <option value="2">2 Year</option>
+                              <option value="3">3 Year</option>
+                              <option value="4">4 Year</option>
+                              <option value="5">5 Year</option>
+                              <option value="6">6 Year</option>
+                              <option value="7">7 Year</option>
+                              <option value="8">8 Year</option>
+                              <option value="9">9 Year</option>
+                              <option value="10">10 Year</option>
+                            </select>
+                            &nbsp;
+                            <div class="input-group-append">
+                              <div id="randomoptiondivadditionalExpense0" style="display: none"> <button type="button"
+                                  name="add" id="addincome" onclick="randomoptionadditionalExpense(0)"
+                                  class="btn btn-sm btn-success">+</button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    {%endif%}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          </br>
+          <div class="row">
+            {% if reportsdata %}
+              <div class="col-lg-5">
+                <input type="hidden" value="{{reportsdata.id}} " name="report_id">
+               <button type="submit"   value="save_investment_analysis" class="btn btn-success btn-lg btn-block waves-effect waves-light m-1"> SAVE INVESTMENT ANALYSIS</button>
+             </div>
+             <div class="col-lg-4">
+         
+             <a class="btn btn-primary btn-lg btn-block waves-effect waves-light m-1" onclick="convert_HTML_To_PDF();">DOWNLOAD PDF</a> 
+           </form> 
+             </div>
+             
+             <div class="col-lg-3">
+            <a class="btn btn-warning btn-lg btn-block waves-effect waves-light m-1" data-toggle="modal" data-target="#createmodal">Send Report </a>
+             </div>
+            {%else%}
+            <!-- <div class="icheck-material-primary">-->
+            <div class="col-sm-5 col-md-5 col-lg-5 col-xl-5">
+              <input type="hidden" value="">
+              <button id="alert-warning" value="save_investment_analysis"
+                class="btn btn-success btn-lg btn-block waves-effect waves-light m-1"> SAVE INVESTMENT
+                ANALYSIS</button>
+            </div>
+            <div class="modal fade" id="wallet">
+              <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content border-success">
+                  <div class="modal-header bg-success">
+                    <h5 class="modal-title text-white">Confirrmation</h5>
+                    <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+
+                  <div class="modal-body">
+                    <p>
+                    <h4 class="mb-0"> Are you sure you want to proceed with Residential Analysis Report?</h4>
+                    </p>
+
+                  </div>
+
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-dark" data-dismiss="modal"><i class="fa fa-times"></i>
+                      Close</button>
+                    <button type="submit" class="btn btn-success" value="save_investment_analysis">Save Investment
+                      Analysis</button>
+
+                  </div>
+                </div>
+              </div>
+            </div><!--End Modal -->
+            </div>
+        </form>
+        {%endif%}
+      </div>
+    </div>
+  </div>
+</div>
+      <div class="col-sm-4 col-md-4 col-lg-4 col-xl-4">
+        <!-- <h1>hello</h1> -->
+        <div class="card">
+          <div class="card-header" style="font-size:30px;">INVESTMENT ANALYSIS
+          </div>
+          <div class="table-responsive">
+            <div id="Result"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- <div class="row"></div>
+
+  </div> -->
+  <!-- <div>
+    <table border='1' class='table table-sm' width='1000px' id='investment_analysis'>
+      <thead>
+        <tr></tr>
+      </thead>
+    </table>
+  </div> -->
+  <div class="row">
+    <div class="col-12 col-lg-12 col-xl-12">
+      <div class="card">
+        <div class="card-header" style="font-size:30px;">INVESTMENT SUMMARY
+        </div>
+        <div class="table-responsive">
+          <div id="Results"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--Residential dynamic update data start-->
+  <div id="residential_data" data-dynupdate-url="{%url 'userapp:residential-analysis'%}" data-csrf="{{csrf_token}}" data-domain="{{CURRENT_DOMAIN}}"></div>
+
+  <!--Residential dynamic update data end-->
+</body>
+<!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
+  integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script> -->
+<!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script> -->
+<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script> -->
+<script src="http://demos.codexworld.com/includes/js/bootstrap.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.2/jspdf.min.js"></script>
+<script src="https://unpkg.com/jspdf-autotable@3.5.13/dist/jspdf.plugin.autotable.js"></script>
+<script src="{% static 'js/residential_analysis.js' %}"></script>
+
+</html>

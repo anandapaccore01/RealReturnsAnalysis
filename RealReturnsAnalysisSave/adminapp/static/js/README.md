@@ -1,0 +1,1 @@
+#Delete this file once js files are added to this folder or use it to provide any information

@@ -1,0 +1,888 @@
+{%load static%}
+{%load user_tags%}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!-- End Breadcrumb-->
+    <style>
+        .card-header-form {
+            background: #5ca9cc;
+            padding: 0px 10px;
+            font-size: 12px;
+        }
+
+        .card-header {
+            background: #5ca9cc;
+
+        }
+
+        .text-white {
+            color: #000 !important;
+        }
+
+        label {
+            color: #eda140;
+        }
+
+        div.ex1 {
+
+            width: 100%;
+            height: 800px;
+            overflow: scroll;
+            overflow-x: hidden;
+        }
+
+        .card-header {
+            background: #5ca9cc !important;
+            color: black !important;
+        }
+
+        .input-group .btn {
+            box-shadow: none;
+            padding: .375rem .75rem;
+            font-size: 16px;
+        }
+
+        table#investment_analysis #blurcss {
+            background: black;
+
+
+            filter: blur(2px);
+            -o-filter: blur(2px);
+            -ms-filter: blur(2px);
+            -moz-filter: blur(2px);
+            -webkit-filter: blur(2px);
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.4/dist/jquery.slim.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- <body onload="dynamicUpdate(); convert_HTML_To_PDF_email();"> -->
+
+</head>
+
+<body>
+    {%if reportsdata %}
+<body onload="dynamicUpdate();">
+    {%endif%}
+          
+    <div class="container">
+        <div class="row">
+
+            <div class="col-12 col-lg-8 col-xl-8" style="border: 1px solid;">
+                <form action="{%url 'userapp:save-comm-dscr-reports'%}" method="POST" class="needs-validation"
+                    novalidate id="comm-dscr-info">
+                    {%csrf_token%}
+                    <div class="card" style="margin-top: 5px;">
+                        <h6 class="text-uppercase" style="margin-top: 5px;text-align: center;">
+                            DSCR INVESTMENT ANALYSIS </h6>
+                        <h6>Debt Service Coverage Ratio (DSCR) Analysis</h6>
+
+                        <div id="accordion1">
+                            <div class="card">
+                                <div class="card-header text-uppercase card-header-form">
+                                    <button type="button" class="btn btn-link text-white shadow-none"
+                                        data-toggle="collapse" data-target="#collapse-1" aria-expanded="true"
+                                        aria-controls="collapse-7">
+                                        Property Details
+                                    </button>
+                                </div>
+
+                                <div id="collapse-1" class="collapse show" data-parent="#accordion1">
+                                    <div class="card-body">
+                                        <div class="row  mt-2">
+                                            <div class="col-12 col-lg-4 col-xl-4">
+                                                <label for="validationCustom09">Asset Name</label> <i aria-hidden="true"
+                                                    data-toggle="tooltip" data-placement="top"
+                                                    title=" config('constants.ASSET_NAME') "
+                                                    class="fa fa-info-circle"></i>
+                                                <div class="input-group">
+                                                    <input type="text" required class="form-control" {% if reportsdata and reportsdata.cloned == 1 %} value="{{reportsdata.borrower_name}}" {%endif%}
+                                                    {%if reportsdata and reportsdata.cloned == 0 %} readonly value="{{reportsdata.borrower_name}}" {%endif%} name="borrower_name" id="borrower_name" placeholder="Asset
+                                                Name " oninput="dynamicUpdate();">
+                                                </div>
+                                            </div>
+                                            <div class="col-12 col-lg-4 col-xl-4">
+                                                <label for="validationCustom09"> Property Type</label> <i
+                                                    aria-hidden="true" data-toggle="tooltip" data-placement="top"
+                                                    title=" config('constants.PROPERTY_TYPE') "
+                                                    class="fa fa-info-circle"></i>
+                                                <div class="input-group">
+
+                                                    <select class="form-control" required id="property_type"
+                                                        name="property_type" onchange="dynamicUpdate();">
+                                                        <option value=''>Choose </option>
+                                                        <option value="Multi-Family" {% if reportsdata and reportsdata.property_type == 'Multi-Family' %} selected {%endif%}>Multi-Family</option>
+                                                        <option value="Mixed-Use" {% if reportsdata and reportsdata.property_type == 'Mixed-Use' %} selected {%endif%}>Mixed-Use</option>
+                                                        <option value="Retail" {% if reportsdata and reportsdata.property_type == 'Retail' %} selected {%endif%}>Retail</option>
+                                                        <option value="Industrial" {% if reportsdata and reportsdata.property_type == 'Industrial' %} selected {%endif%}>Industrial</option>
+                                                        <option value="Office" {% if reportsdata and reportsdata.property_type == 'Office' %} selected {%endif%}>Office</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-12 col-lg-4 col-xl-4">
+                                                <label for="validationCustom09">No of units </label> <i
+                                                    aria-hidden="true" data-toggle="tooltip" data-placement="top"
+                                                    title=" config('constants.NO_UNITS') "
+                                                    class="fa fa-info-circle"></i>
+                                                <div class="input-group">
+                                                    <select class="form-control" required id="no_units" name="no_units"
+                                                        onchange="dynamicUpdate();">
+                                                        <option value=''>Choose </option>
+                                                        {% get_range 1 31 as units_range%}
+                                                        {%for x in units_range %}
+                                                        <option value='{{x}}' {% if reportsdata and reportsdata.no_units == x %} selected {%endif%}>{{x}} </option>
+                                                        {%endfor%}
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row mt-2">
+                                            <div class="col-12 col-lg-4 col-xl-4">
+                                                <label for="validationCustom09">Approx Sq Footage</label> <i
+                                                    aria-hidden="true" data-toggle="tooltip" data-placement="top"
+                                                    title=" config('constants.APPROX_SQ_FOOTAGE') "
+                                                    class="fa fa-info-circle"></i>
+                                                <div class="input-group">
+                                                    <input type="number" min="0" oninput="this.value = 
+ !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null" class="form-control" required
+                                                        id="approximate_sq_footage" oninput="dynamicUpdate();"
+                                                        name="approximate_sq_footage"
+                                                        {% if reportsdata %} value="{{reportsdata.approximate_sq_footage}}" {%endif%}
+                                                        placeholder="Approximate Square Footage">
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card">
+                                <div class="card-header text-uppercase card-header-form">
+                                    <button type="button" id="loan-details"
+                                        class="btn btn-link text-white shadow-none collapsed" data-toggle="collapse"
+                                        data-target="#collapse-2" aria-expanded="false" aria-controls="collapse-2">
+                                        Loan Terms
+                                    </button>
+                                </div>
+                                <div id="collapse-2" class="collapse" data-parent="#accordion1">
+                                    <div class="card-body">
+                                        <div class="row mt-2">
+                                            <div class="col-12 col-lg-4 col-xl-4">
+                                                <label for="validationCustom09">Property value</label> <i
+                                                    aria-hidden="true" data-toggle="tooltip" data-placement="top"
+                                                    title=" config('constants.PROPERTY_VALUE') "
+                                                    class="fa fa-info-circle"></i>
+                                                <div class="input-group">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text">$</span>
+                                                    </div>
+                                                    <input type="number" required class="form-control"
+                                                        id="property_value" name="property_value" {% if reportsdata and reportsdata.cloned == 1 %} value="{{reportsdata.property_value}}" {%endif%}
+                                                        {% if reportsdata and reportsdata.cloned == 0 %} readonly value="{{reportsdata.property_value}}" {%endif%} placeholder="Enter Property value" oninput="dynamicUpdate();"
+                                                        min="0" onblur="this.value =!!this.value && Math.abs(this.value) >= 0 ?
+                                            Math.abs(this.value) : null">
+                                                </div>
+                                            </div>
+
+                                            <div class="col-12 col-lg-4 col-xl-4">
+                                                <label for="validationCustom09" style="color:#be4741;">Loan Amount
+                                                </label>
+                                                <i aria-hidden="true" data-toggle="tooltip" data-placement="top"
+                                                    title=" config('constants.LOAN_AMOUNT') "
+                                                    class="fa fa-info-circle"></i>
+                                                <div class="input-group">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text">$</span>
+                                                    </div>
+                                                    <input type="number" min="0" onblur="this.value = 
+ !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null" required class="form-control" readonly
+                                                        name="loan_amount" id="loan_amount" {%if reportsdata %} value="{{reportsdata.loan_amount}}" {%endif%} placeholder="Enter Loan
+                                            Amount" oninput="dynamicUpdate();">
+
+                                                </div>
+                                            </div>
+                                            <div class="col-12 col-lg-4 col-xl-4">
+                                                <label for="validationCustom09" style="color:#be4741;">Loan to Value
+                                                    (LTV)</label> <i aria-hidden="true" data-toggle="tooltip"
+                                                    data-placement="top" title=" config('constants.LTV') "
+                                                    class="fa fa-info-circle"></i>
+                                                <div class="input-group">
+                                                    <input type="text" required class="form-control" name="ltv" readonly
+                                                        id="ltv" oninput="dynamicUpdate();"
+                                                        placeholder="Enter Loan to Value (LTV)">
+                                                </div>
+                                            </div>
+
+
+
+
+                                        </div>
+
+
+                                        <div class="row  mt-2">
+
+                                            <div class="col-12 col-lg-4 col-xl-4">
+                                                <label for="validationCustom09"> Amortization (Years)</label> <i
+                                                    aria-hidden="true" data-toggle="tooltip" data-placement="top"
+                                                    title=" config('constants.AMMORTIZATION_YEARS') "
+                                                    class="fa fa-info-circle"></i>
+                                                <div class="input-group">
+
+                                                    <select class="form-control" required id="amortization_years"
+                                                        name="amortization_years" onchange="dynamicUpdate();">
+                                                        <option value='25' selected>25 </option>
+                                                        {% get_range 1 31 as units_range%}
+                                                        {%for x in units_range %}
+                                                        <option value='{{x}}' {% if reportsdata and reportsdata.amortization_years == x %} selected {%endif%}>{{x}} </option>
+                                                        {%endfor%}
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-12 col-lg-4 col-xl-4">
+                                                <label for="validationCustom09">Interest rate </label> <i
+                                                    aria-hidden="true" data-toggle="tooltip" data-placement="top"
+                                                    title=" config('constants.INTEREST_RATE') "
+                                                    class="fa fa-info-circle"></i>
+                                                <div class="input-group">
+                                                    <input type="number" min="0" onblur="this.value = 
+ !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null" class="form-control" required
+                                                        name="interest_rate" {% if reportsdata %} value="{{reportsdata.interest_rate}}" {%endif%} id="interest_rate"
+                                                        placeholder="Enter Interest rate" value='4'
+                                                        oninput="dynamicUpdate();">
+                                                    <div class="input-group-append">
+                                                        <span class="input-group-text">%</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-12 col-lg-4 col-xl-4">
+                                                <label for="validationCustom09" style="color:#be4741;">Down
+                                                    Payment</label>
+                                                <i aria-hidden="true" data-toggle="tooltip" data-placement="top"
+                                                    title=" config('constants.DOWN_PAYMENT_VALUE') "
+                                                    class="fa fa-info-circle"></i>
+                                                <div class="input-group">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text">$</span>
+                                                    </div>
+                                                    <input type="number" min="0" onblur="this.value = 
+ !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null" class="form-control" required
+                                                        id="down_payment" {% if reportsdata %} value="{{reportsdata.down_payment}}" {%endif%} readonly name="down_payment"
+                                                        oninput="dynamicUpdate();" placeholder="Enter Down Payment">
+
+                                                </div>
+                                            </div>
+
+                                            <div class="col-12 col-lg-4 col-xl-4">
+                                                <label for="validationCustom09" style="color:#be4741;">DSCR </label> <i
+                                                    aria-hidden="true" data-toggle="tooltip" data-placement="top"
+                                                    title=" config('constants.DSCR') " class="fa fa-info-circle"></i>
+                                                <div class="input-group">
+                                                    <input type="text" required class="form-control" {% if reportsdata %} value="{{reportsdata.dscr_ratio}}" {%endif%}  name="dscr_ratio"
+                                                        oninput="dynamicUpdate();" readonly id="dscr_ratio">
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="card">
+                                <div class="card-header text-uppercase card-header-form">
+                                    <button type="button" class="btn btn-link text-white shadow-none collapsed"
+                                        data-toggle="collapse" data-target="#collapse-3" aria-expanded="false"
+                                        aria-controls="collapse-3">
+                                        INCOME
+                                    </button>
+                                </div>
+                                <div id="collapse-3" class="collapse" data-parent="#accordion1">
+                                    <div class="card-body">
+
+                                        <div class="row mt-2">
+                                            <div class="col-12 col-lg-4 col-xl-4">
+                                                <label for="validationCustom09">Gross Annual Rental Inc</label> <i
+                                                    aria-hidden="true" data-toggle="tooltip" data-placement="top"
+                                                    title=" config('constants.GROSS_RENTAL_INCOME_INC') "
+                                                    class="fa fa-info-circle"></i>
+                                                <div class="input-group">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text">$</span>
+                                                    </div>
+                                                    <input type="number" min="0" onblur="this.value = 
+ !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null" class="form-control" required
+                                                        name="gross_annual_rental" id="gross_annual_rental"  {%if reportsdata %} value="{{reportsdata.gross_annual_rental}}" {%endif%} placeholder="Enter Gross Annual
+                                            Rental Income" oninput="dynamicUpdate();">
+                                                </div>
+                                            </div>
+                                            <div class="col-12 col-lg-4 col-xl-4">
+                                                <label for="validationCustom09"> Other Income</label> <i
+                                                    aria-hidden="true" data-toggle="tooltip" data-placement="top"
+                                                    title=" config('constants.OTHER_INCOME') "
+                                                    class="fa fa-info-circle"></i>
+                                                <div class="input-group">
+
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text">$</span>
+                                                    </div>
+                                                    <input type="number" min="0" onblur="this.value = 
+ !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null" class="form-control" required
+                                                        name="other_income" id="other_income" {% if reportsdata %} value="{{reportsdata.other_income}}" {% else %} value="0" {%endif%}
+                                                        placeholder="Enter Other Income" oninput="dynamicUpdate();">
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+
+
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="card">
+                                <div class="card-header text-uppercase card-header-form">
+                                    <button type="button" class="btn btn-link text-white shadow-none collapsed"
+                                        data-toggle="collapse" data-target="#collapse-4" aria-expanded="false"
+                                        aria-controls="collapse-4">
+                                        Annual Operating Expenses
+                                    </button>
+                                </div>
+                                <div id="collapse-4" class="collapse" data-parent="#accordion1">
+                                    <div class="card-body">
+
+                                        <div class="row  mt-2 ">
+                                            <div class="col-12 col-lg-4 col-xl-4">
+                                                <label for="validationCustom09">Utilities / Telephone</label> <i
+                                                    aria-hidden="true" data-toggle="tooltip" data-placement="top"
+                                                    title=" config('constants.UTILITIES_TELEPHONE') "
+                                                    class="fa fa-info-circle"></i>
+                                                <div class="input-group">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text">$</span>
+                                                    </div>
+                                                    <input type="number" min="0" onblur="this.value = 
+ !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null" class="form-control" required
+                                                        name="utilities_telephone" {% if reportsdata %} value="{{reportsdata.utilities_telephone}}" {%else%} value="0"  {%endif%} id="utilities_telephone"
+                                                        placeholder="" oninput="dynamicUpdate();">
+                                                </div>
+                                            </div>
+                                            <div class="col-12 col-lg-4 col-xl-4">
+                                                <label for="validationCustom09"> Repairs and Maintenance</label> <i
+                                                    aria-hidden="true" data-toggle="tooltip" data-placement="top"
+                                                    title=" config('constants.REAPIRS_MAINTENANCE') "
+                                                    class="fa fa-info-circle"></i>
+                                                <div class="input-group">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text">$</span>
+                                                    </div>
+                                                    <input type="number" min="0" onblur="this.value = 
+ !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null" class="form-control" required
+                                                        name="repairs_maintenance" {% if reportsdata %} value="{{reportsdata.repairs_maintenance}}" {%else%} value="0"  {%endif%} id="repairs_maintenance"
+                                                        placeholder="" oninput="dynamicUpdate();">
+                                                </div>
+                                            </div>
+
+                                            <div class="col-12 col-lg-4 col-xl-4">
+                                                <label for="validationCustom09">Salaries / Legal / Admin</label> <i
+                                                    aria-hidden="true" data-toggle="tooltip" data-placement="top"
+                                                    title=" config('constants.SALARIES_LEGAL_ADMIN') "
+                                                    class="fa fa-info-circle"></i>
+                                                <div class="input-group">
+
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text">$</span>
+                                                    </div>
+                                                    <input type="number" min="0" onblur="this.value = 
+ !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null" class="form-control" required
+                                                        name="salaries_legal" {% if reportsdata %} value="{{reportsdata.salaries_legal}}" {%else%} value="0" {%endif%} id="salaries_legal" placeholder=""
+                                                        oninput="dynamicUpdate();">
+                                                </div>
+                                            </div>
+
+
+
+                                        </div>
+
+                                        <div class="row mt-2">
+
+                                            <div class="col-12 col-lg-4 col-xl-4">
+                                                <label for="validationCustom09"> Snow / Trash</label> <i
+                                                    aria-hidden="true" data-toggle="tooltip" data-placement="top"
+                                                    title=" config('constants.SNOW_TRASH') "
+                                                    class="fa fa-info-circle"></i>
+                                                <div class="input-group">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text">$</span>
+                                                    </div>
+                                                    <input type="number" min="0" onblur="this.value = 
+ !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null" class="form-control" {% if reportsdata %} value="{{reportsdata.snow_trash}}" {%else%} value="0"  {%endif%} name="snow_trash"
+                                                        required id="snow_trash" placeholder=""
+                                                        oninput="dynamicUpdate();">
+                                                </div>
+                                            </div>
+                                            <div class="col-12 col-lg-4 col-xl-4">
+                                                <label for="validationCustom09">R.E. Taxes</label> <i aria-hidden="true"
+                                                    data-toggle="tooltip" data-placement="top"
+                                                    title=" config('constants.RE_TAXES') "
+                                                    class="fa fa-info-circle"></i>
+                                                <div class="input-group">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text">$</span>
+                                                    </div>
+                                                    <input type="number" min="0" onblur="this.value = 
+ !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null" class="form-control" {% if reportsdata %} value="{{reportsdata.re_taxes}}" {%else%} value="0" {%endif%} name="re_taxes" required
+                                                        id="re_taxes" placeholder="" oninput="dynamicUpdate();">
+                                                </div>
+                                            </div>
+                                            <div class="col-12 col-lg-4 col-xl-4">
+                                                <label for="validationCustom09">Insurance</label> <i aria-hidden="true"
+                                                    data-toggle="tooltip" data-placement="top"
+                                                    title=" config('constants.INSURANCE') "
+                                                    class="fa fa-info-circle"></i>
+                                                <div class="input-group">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text">$</span>
+                                                    </div>
+                                                    <input type="number" min="0" onblur="this.value = 
+ !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null" class="form-control" {% if reportsdata %} value="{{reportsdata.insurance}}" {%else%} value="0" {%endif%} name="insurance"
+                                                        required id="insurance" placeholder=""
+                                                        oninput="dynamicUpdate();">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row mt-2">
+                                            <div class="col-12 col-lg-4 col-xl-4">
+                                                <label for="validationCustom09">Other Operating Exp</label> <i
+                                                    aria-hidden="true" data-toggle="tooltip" data-placement="top"
+                                                    title=" config('constants.OTHER_OPERATING_EXPENSES') "
+                                                    class="fa fa-info-circle"></i>
+                                                <div class="input-group">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text">$</span>
+                                                    </div>
+                                                    <input type="number" min="0" onblur="this.value = 
+ !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null" class="form-control" {%if reportsdata %} value="{{reportsdata.other_operating_exp}}" {%else%} value="0" {%endif%} required value="0"
+                                                        name="other_operating_exp" id="other_operating_exp"
+                                                        placeholder="" oninput="dynamicUpdate();">
+                                                </div>
+                                            </div>
+
+                                            <div class="col-12 col-lg-4 col-xl-4">
+                                                <label for="validationCustom09"> Annual Operating Exp</label> <i
+                                                    aria-hidden="true" data-toggle="tooltip" data-placement="top"
+                                                    title=" config('constants.ANNUAL_OPERATING_EXPENSES') "
+                                                    class="fa fa-info-circle"></i>
+                                                <div class="input-group">
+
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text">$</span>
+                                                    </div>
+                                                    <input type="number" min="0" onblur="this.value = 
+ !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null" class="form-control"
+                                                        name="annual_operating_exp" {%if reportsdata%} value="{{reportsdata.annual_operating_exp}}" {%else%} value="0" {%endif%} id="annual_operating_exp" value="0"
+                                                        placeholder="Enter Other Income" oninput="dynamicUpdate();">
+                                                </div>
+                                            </div>
+
+                                            <div class="col-12 col-lg-4 col-xl-4">
+                                                <label for="validationCustom09">Mgmt Fees </label> <i aria-hidden="true"
+                                                    data-toggle="tooltip" data-placement="top"
+                                                    title=" config('constants.MGMT_FEES') "
+                                                    class="fa fa-info-circle"></i>
+                                                <div class="input-group">
+
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text">$</span>
+                                                    </div>
+                                                    <input type="number" min="0" onblur="this.value = 
+ !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null" class="form-control" {%if reportsdata %} value="{{reportsdata.mgmt_fees}}" {%else%} value="0" {%endif%} name="mgmt_fees"
+                                                        id="mgmt_fees" value="" placeholder="Enter Other Income"
+                                                        oninput="dynamicUpdate();">
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    </br> </br> </br>
+                    <div class="row mt-2">
+
+                        <div class="icheck-material-primary">
+                        {% if reportsdata %}
+                <div class="col-lg-6">
+                    <input type="hidden" value="{{reportsdata.id}}" name="report_id">
+                    <button type="submit" value="save_investment_analysis"
+                        class="btn btn-success btn-lg btn-block waves-effect waves-light m-1"> SAVE INVESTMENT
+                        ANALYSIS</button>
+                </div>
+                <div class="col-lg-6">
+
+                    <a class="btn btn-primary btn-lg btn-block waves-effect waves-light m-1"
+                        onclick="convert_HTML_To_PDF();">DOWNLOAD PDF</a>
+
+                </div>
+        </form>
+        {%else%}
+
+                        <div class="col-lg-12">
+                            <button type="submit" id="alert-warning"
+                                class="btn btn-success btn-lg btn-block waves-effect waves-light m-1"> SAVE DSCR
+                                ANALYSIS</button>
+                        </div>
+
+                        <div class="modal fade" id="wallet">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content border-success">
+                                    <div class="modal-header bg-success">
+                                        <h5 class="modal-title text-white">Wallet</h5>
+                                        <button type="button" class="close text-white" data-dismiss="modal"
+                                            aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+
+                                    <div class="modal-body">
+                                        <p>
+                                        <h4 class="mb-0"> Are you sure you want to create the report now?</h4>
+                                        </p>
+
+                                    </div>
+
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-dark" data-dismiss="modal"><i
+                                                class="fa fa-times"></i>
+                                            Close</button>
+                                        <button type="submit" class="btn btn-success"
+                                            value="save_investment_analysis"><i class="fa fa-check-square-o"></i> Save
+                                            Investment Analysis</button>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div><!--End Modal-->
+
+
+                </form>
+                {%endif%}
+
+
+            </div>
+
+            </br>
+        {% if reportsdata %}
+    <div class="row">
+
+        <div class="col-lg-6">
+
+            <a class="btn btn-primary btn-lg btn-block waves-effect waves-light m-1"
+                href="{%url 'userapp:comm-roi'%}?descr_id={{reportsdata.id}}">Create Commercial Analysis</a>
+        </div>
+        <div class="col-lg-6">
+            <a class="btn btn-warning btn-lg btn-block waves-effect waves-light m-1" data-toggle="modal"
+                data-target="#createmodal">Send Report </a>
+        </div>
+    </div>
+    {%endif%}
+            </br> </br>
+        </div>
+        <div class="col-12 col-lg-4 col-xl-4" style="border: 1px solid;">
+            <div class="card">
+                <div class="card-header text-uppercase card-header-form" style="margin-top: 10px;">DSCR ANALYSIS SUMMARY
+                </div>
+
+                <div class="table-responsive" id="dscr_summary1">
+
+                    <table class="table table-sm" id="dscr_summary">
+                        <tr>
+                            <thead>
+                                <tr>
+                                    <th colspan="2">DSCR Summary </th>
+                            </thead>
+                            <tbody>
+                                <tr>
+
+                                <tr>
+                                    <td scope="row"> Total annual rents</td>
+                                    <td> <span id="total_annual_rents"> </span> </td>
+                                </tr>
+
+                                <tr>
+                                    <td scope="row"> Less Vacancy (Minimum Actual % </br>or 5% [Office 10%] of Total
+                                        Rents )
+                                    </td>
+                                    <td> <span id="less_vacancy"> </span></td>
+                                </tr>
+
+                                <tr>
+                                    <td scope="row"> Effective annual gross income (E.G.I.)</h5>
+                                    </td>
+                                    <td> <span id="effective_total_annual_rents"> </span></td>
+                                </tr>
+
+
+
+                                <tr>
+                                    <td scope="row">Annual Debt Service</td>
+                                    <td> <span id="annual_debt"></span></td>
+                                </tr>
+
+                                <tr>
+                                    <td scope="row"> Monthly Loan Payment</td>
+                                    <td> <span id="monthly_loan_payment"></span></td>
+                                </tr>
+                                <tr>
+                                    <td scope="row"> Total Operating Expenses</td>
+                                    <td> <span id="total_operating_expenses"></span></td>
+                                </tr>
+                                <tr>
+                                    <td scope="row"> Less Reserves </td>
+                                    <td> <span id="less_reserves"></span></td>
+                                </tr>
+                                <tr>
+                                    <td scope="row"> Cash Flow</td>
+                                    <td> <span id="cash_flow"></span></td>
+                                </tr>
+                                <tr>
+                                    <td scope="row"> Less Annual Debt Service </td>
+                                    <td> <span id="less_annual_debt"></span></td>
+                                </tr>
+                                <tr>
+                                    <td scope="row"> Cash Flow After Debt Service</td>
+                                    <td> <span id="cash_flow_after_debt_service"></span></td>
+                                </tr>
+                                <tr>
+                                    <td scope="row"> Debt Service Coverage Ratio (DSCR) </td>
+                                    <td> <span id="debt_service_coverage_ratio"></span> </td>
+                                </tr>
+                                <tr>
+                                    <td scope="row"> Loan amount </td>
+                                    <td> <span id="loan_amount_prev"></span></td>
+                                </tr>
+                                <tr>
+                                    <td scope="row"> Downpayment </td>
+                                    <td> <span id="downpayment_prev"></span></td>
+                                </tr>
+                                <tr>
+                                    <td scope="row"> Loan to value (LTV) </td>
+                                    <td> <span id="ltv_prev1"></span> % </td>
+                                </tr>
+                    </table>
+                </div>
+
+
+            </div>
+        </div>
+
+    </div>
+
+
+
+    <div id="contnet">
+        <!-- <div class="row" id="dscr_details">
+        <div class="col-12"></br></br>
+            <div class="card">
+                <div class="card-header" style="font-size:30px;">DSCR Details
+                </div>
+
+                <div class="card-body">
+                    <table border="1" class="table table-sm" width="800px" id="dscr_details_print">
+                        <tr>
+                            <thead>
+                                <tr>
+                                    <th colspan="6">DSCR Details </th>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Borrower Name</td>
+                                    <td> <span id="borrower_name_prev"></span> </td>
+                                    <td>Property Type</td>
+                                    <td> <span id="property_type_prev"></span> </td>
+                                    <td>No Units</td>
+                                    <td> <span id="no_units_prev"></span> </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>Approximate Sq Footage</td>
+                                    <td> <span id="approximate_sq_footage_prev"></span> SQft </td>
+                                    <td>Property Value </td>
+                                    <td>$ <span id="property_value_prev"></span> </td>
+
+                                    <td>Loan Amount</td>
+                                    <td> <span id="loan_amount_prev1"></span> </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td>Loan to value (LTV)</td>
+                                    <td> <span id="ltv_prev"></span></td>
+                                    <td>Ammortization (years)</td>
+                                    <td> <span id="amortization_years_prev"></span> Years </td>
+                                    <td>&nbsp;</td>
+                                    <td> &nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <td>Interest Rate </td>
+                                    <td> <span id="interest_rate_prev"></span> % </td>
+                                    <td>Amount down payment</td>
+                                    <td><span id="downpayment_prev1"></span></td>
+                                    <td>Gross annual rental income</td>
+                                    <td>$ <span id="gross_annual_rental_prev"></span> </td>
+
+                                </tr>
+                                <tr>
+                                    <td>Other income</td>
+                                    <td> $ <span id="other_income_prev"></span></td>
+                                    <td>Annual operating Exp</td>
+                                    <td> $ <span id="annual_operating_exp_prev"></span></td>
+
+                                    <td>Mgmt Fees</td>
+                                    <td> $ <span id="mgmt_fees_prev"></span> </td>
+
+                                </tr>
+
+
+
+                                <tr>
+                                    <td>Utilities /Telephone</td>
+                                    <td> $ <span id="utilities_telephone_prev"></span> </td>
+                                    <td>Repairs & maintenance</td>
+                                    <td> $ <span id="repairs_maintenance_prev"></span> </td>
+
+                                    <td>Salaries / Legal / Admin</td>
+                                    <td> $ <span id="salaries_legal_prev"></span> <span id="rent_increases_prev"></span>
+                                    </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td>Snow / Trash</td>
+                                    <td> $ <span id="snow_trash_prev"></span> </td>
+
+                                    <td>R.E. Taxes </td>
+                                    <td> $ <span id="re_taxes_prev"></span> </td>
+                                    <td>Insurance</td>
+                                    <td>$ <span id="insurance_income"></span></td>
+
+                                </tr>
+                                <tr>
+                                    <td>Other Operating Exp </td>
+                                    <td>$ <span id="other_operating_exp_income"></span></td>
+                                    <td>&nbsp;</td>
+                                    <td>&nbsp;</td>
+                                    <td>&nbsp;</td>
+                                    <td>&nbsp;</td>
+                                </tr>
+
+
+                            </tbody>
+                    </table>
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+
+    </div>End Row -->
+
+        <div class="row" id="roi_summary">
+            <div class="col-12 col-lg-12 col-xl-12">
+                <div class="card">
+                    <div class="card-header" style="font-size:30px;">DSCR SUMMARY
+                    </div>
+
+
+                    <div class="table-responsive" id="dscr_summary_print">
+
+
+                    </div>
+                </div>
+            </div><!--End Row-->
+
+
+
+        </div>
+    </div>
+    <!--DSCR dynamic update data start-->
+    <div id="DSCR_data" data-dynupdate-url="{%url 'userapp:comm-dscr-analysis'%}"></div>
+    <!--DSCR dynamic update data end-->
+
+
+    <!-- <div class="modal fade" id="createmodal">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-success">
+                <div class="modal-header bg-success">
+                    <h5 class="modal-title text-white">Enter Email ID</h5>
+                    <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <div class="modal-body">
+                    <form action=" route('sendReportonEmailAdminFromReportDSCR') " enctype="multipart/form-data"
+                        method="POST">
+                        @csrf
+
+
+                        <div class="form-group">
+                            <label for="input-1">Enter Email ( Multiple Email comma Separeated)</label>
+                            <textarea name="email_send" required id="email_send" class="form-control" id="input-1"
+                                placeholder="Enter Email"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="input-1">Enter Subject</label>
+                            <input type="text" name="email_subject" required class="form-control"
+                                placeholder="Enter subject" value=" $report_subject ">
+                        </div>
+                        <div class="form-group">
+                            <label for="input-1">Enter Your Message</label>
+                            <textarea name="custom_messages" required class="form-control"
+                                placeholder="Enter your message"></textarea>
+                        </div>
+
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-dark" data-dismiss="modal"><i class="fa fa-times"></i>
+                        Close</button>
+                    <div id="send_button"> <button type="submit" class="btn btn-success"><i
+                                class="fa fa-check-square-o"></i> Send Report </button></div>
+                </div>
+                <input type="hidden" value="<?php echo $reportsdata->id;?>" name="report_id">
+                <input type="hidden" value="reports" name="table">
+                <div class="modal-footer">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>End Modal -->
+
+    </div>
+</body>
+<meta name="csrf-token" content=" csrf_token() ">
+<!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script> -->
+<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script> -->
+<!-- <script src="http://demos.codexworld.com/includes/js/bootstrap.js"></script> -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.2/jspdf.min.js"></script>
+<script src="https://unpkg.com/jspdf-autotable@3.5.13/dist/jspdf.plugin.autotable.js"></script>
+<script src="{% static 'js/comm_dscr_analysis.js' %}"></script>
+
+</html>
